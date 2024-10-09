@@ -1,33 +1,9 @@
+package database
+
+import domain.Person
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.*
-
-class InMemoryDatabase : Database<Person> {
-    private val users = mutableMapOf<String, Person>()
-
-    override fun get(id: String): Optional<Person> {
-        return Optional.ofNullable(users[id])
-    }
-
-    override fun add(id: String, person: Person) {
-        users[id] = person
-    }
-
-    override fun update(id: String, person: Person): Boolean {
-        return if (users.containsKey(id)) {
-            users[id] = person
-            true
-        } else {
-            false
-        }
-    }
-
-    override fun delete(id: String): Boolean {
-        return users.remove(id) != null
-    }
-}
-
 
 class PersonDatabaseTest {
 
@@ -35,7 +11,7 @@ class PersonDatabaseTest {
 
     @BeforeEach
     fun setUp() {
-        database = InMemoryDatabase()
+        database = DatabaseMock()
     }
 
     @Test
