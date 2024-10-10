@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_package = "org.example.grpc";
+option java_outer_classname = "AuthProto";
+
+service AuthService {
+  rpc Register (RegisterRequest) returns (AuthResponse);
+  rpc Login (LoginRequest) returns (AuthResponse);
+}
+
+message RegisterRequest {
+  string name = 1;
+  string login = 2;
+  string password = 3;
+}
+
+message LoginRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message AuthResponse {
+  bool success = 1;
+  string message = 2;
+}
