@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class PersonDatabaseTest {
-
+class DatabaseMockTest {
     private lateinit var database: Database<Person>
 
     @BeforeEach
