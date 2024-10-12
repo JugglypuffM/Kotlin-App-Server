@@ -7,7 +7,8 @@ package domain
 data class Person(
     val name: String,
     val login: String,
-    val password: String
+    val password: String,
+    val distance: Int
 ){
     init {
         require(name.isNotBlank()) { "Name cannot be blank" }
