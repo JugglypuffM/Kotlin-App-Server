@@ -18,7 +18,6 @@ class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrp
         try {
             val person = Person(request.name, request.login, request.password)
             val authResult = authenticator.register(person)
-            //TODO: запомнить факт логина где-нибудь в БД
 
             responseObserver.onNext(createAuthResponse(authResult))
         }
@@ -32,7 +31,6 @@ class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrp
 
     override fun login(request: LoginRequest, responseObserver: StreamObserver<AuthResponse>) {
         val authResult = authenticator.login(request.login, request.password)
-        //TODO: запомнить факт логина где-нибудь в БД
 
         responseObserver.onNext(createAuthResponse(authResult))
         responseObserver.onCompleted()
