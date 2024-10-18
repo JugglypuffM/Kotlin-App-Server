@@ -2,15 +2,15 @@ package auth
 
 import database.Database
 import domain.AuthResult
-import domain.Person
+import domain.User
 
-class Authenticator(private val database: Database<Person>) {
+class Authenticator(private val database: Database<User>) {
 
-    fun register(person: Person): AuthResult {
-        if (database.get(person.login).isPresent) {
+    fun register(user: User): AuthResult {
+        if (database.get(user.login).isPresent) {
             return AuthResult(false, "User already exists.")
         }
-        database.add(person.login, person)
+        database.add(user.login, user)
         return AuthResult(true, "User successfully registered.")
     }
 

@@ -4,7 +4,7 @@ package domain
  * Класс с информацией о пользователе
  * Позже расширить, добавить: Возраст, дату рождения, прйдённое растояние и т.п.
  */
-data class Person(
+data class User(
     val name: String,
     val login: String,
     val password: String
