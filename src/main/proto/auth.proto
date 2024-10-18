@@ -20,6 +20,6 @@ message LoginRequest {
 }
 
 message AuthResponse {
-  bool success = 1;
+  int32 resultCode = 1;
   string message = 2;
 }

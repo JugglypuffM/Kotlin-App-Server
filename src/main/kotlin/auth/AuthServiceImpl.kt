@@ -2,6 +2,7 @@ package auth
 
 import domain.AuthResult
 import domain.Person
+import domain.ResultCode
 import org.example.grpc.AuthProto.*
 import org.example.grpc.AuthServiceGrpc
 import io.grpc.stub.*
@@ -9,7 +10,7 @@ import io.grpc.stub.*
 class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrpc.AuthServiceImplBase() {
     private fun createAuthResponse(authResult: AuthResult): AuthResponse {
         return AuthResponse.newBuilder()
-            .setSuccess(authResult.success)
+            .setResultCode(authResult.resultCode.code)
             .setMessage(authResult.message)
             .build()
     }
@@ -21,8 +22,8 @@ class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrp
 
             responseObserver.onNext(createAuthResponse(authResult))
         }
-        catch (e: IllegalArgumentException) {
-            responseObserver.onNext(createAuthResponse(AuthResult(false, "Invalid login or password.")))
+        catch (_: IllegalArgumentException) {
+            responseObserver.onNext(createAuthResponse(AuthResult(ResultCode.INVALID_CREDENTIALS, "Invalid login or password.")))
         }
         finally {
             responseObserver.onCompleted()
