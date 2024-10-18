@@ -1,3 +1,5 @@
+package database
+
 import java.util.*
 
 interface Database<T> {
