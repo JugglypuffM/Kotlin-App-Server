@@ -16,6 +16,6 @@ data class Person(
     }
 
     override fun toString(): String {
-        return "domain.Person(name='$name', login='$login')"
+        return "Person(name='$name', login='$login')"
     }
 }
