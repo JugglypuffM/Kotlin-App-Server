@@ -1,13 +1,13 @@
 package auth
 
 import domain.AuthResult
-import domain.Person
+import domain.User
 import domain.ResultCode
+import grpc.AuthProto.AuthResponse
+import grpc.AuthProto.LoginRequest
+import grpc.AuthProto.RegisterRequest
 import io.mockk.*
 import io.grpc.stub.StreamObserver
-import org.example.grpc.AuthProto.AuthResponse
-import org.example.grpc.AuthProto.LoginRequest
-import org.example.grpc.AuthProto.RegisterRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -27,14 +27,14 @@ class AuthServiceTest {
 
     @Test
     fun `register - successful registration`() {
-        val person = Person("John Doe", "johndoe", "password123")
+        val user = User("John Doe", "johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(person.name)
-            .setLogin(person.login)
-            .setPassword(person.password)
+            .setName(user.name)
+            .setLogin(user.login)
+            .setPassword(user.password)
             .build()
 
-        every { authenticator.register(person) } returns AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully registered.")
+        every { authenticator.register(user) } returns AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully registered.")
 
         authService.register(request, responseObserver)
 
@@ -44,14 +44,14 @@ class AuthServiceTest {
 
     @Test
     fun `register - user already exists`() {
-        val person = Person("John Doe", "johndoe", "password123")
+        val user = User("John Doe", "johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(person.name)
-            .setLogin(person.login)
-            .setPassword(person.password)
+            .setName(user.name)
+            .setLogin(user.login)
+            .setPassword(user.password)
             .build()
 
-        every { authenticator.register(person) } returns AuthResult(ResultCode.USER_ALREADY_EXISTS, "User already exists.")
+        every { authenticator.register(user) } returns AuthResult(ResultCode.USER_ALREADY_EXISTS, "User already exists.")
 
         authService.register(request, responseObserver)
 
