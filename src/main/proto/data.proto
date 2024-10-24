@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "grpc";
+option java_outer_classname = "DataProto";
+
+service DataService{
+  rpc getBasicUserData (BasicDataRequest) returns (BasicDataResponse);
+}
+
+message BasicDataRequest{
+  string login = 1;
+  string password = 2;
+}
+
+message BasicDataResponse{
+  bool success = 1;
+  string name = 2;
+}
