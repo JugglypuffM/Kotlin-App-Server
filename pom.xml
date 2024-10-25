@@ -125,12 +125,11 @@
     </build>
 
     <dependencies>
-        <!-- Библиотека Dotenv - конфигурация окружения -->
+        <!-- Библиотека Dotenv для работы с переменными среды -->
         <dependency>
             <groupId>io.github.cdimascio</groupId>
-            <artifactId>dotenv-kotlin</artifactId>
-            <version>6.4.1</version>
-            <scope>runtime</scope>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
         </dependency>
 
         <!-- Библиотека Exposed - ORM для бд -->
@@ -219,11 +218,6 @@
             <artifactId>mockk</artifactId>
             <version>1.12.0</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>java-dotenv</artifactId>
-            <version>5.2.2</version>
         </dependency>
 
     </dependencies>
