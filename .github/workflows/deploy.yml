@@ -1,0 +1,41 @@
+name: CI\CD
+
+on:
+  push:
+    branches: [ "master", "dev", "juggly-ci"]
+  pull_request:
+    branches: [ "master", "dev" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build and test with Maven
+        run: mvn -B test --file pom.xml
+
+#  deploy:
+#    needs: test
+#    runs-on: ubuntu-latest
+#    if: github.ref == 'refs/heads/master'
+#    steps:
+#      - name: Run command on remote server
+#        uses: D3rHase/ssh-command-action@v0.2.2
+#        with:
+#          host: ${{secrets.SSH_HOST}}
+#          user: ${{secrets.SSH_USER}}
+#          private_key: ${{secrets.SSH_PRIVATE_KEY}}
+#          command: |
+#            cd ${{ secrets.PROJECT_FOLDER }};
+#            git checkout master;
+#            git pull;
+#            sudo docker compose -p bot build;
+#            sudo docker compose -p bot up -d;
+#            sudo docker system prune --force;
