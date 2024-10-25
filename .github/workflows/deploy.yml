@@ -21,10 +21,10 @@ jobs:
       - name: Build and test with Maven
         run: mvn -B test --file pom.xml
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+#  deploy:
+#    needs: test
+#    runs-on: ubuntu-latest
+#    if: github.ref == 'refs/heads/master'
 #    steps:
 #      - name: Run command on remote server
 #        uses: D3rHase/ssh-command-action@v0.2.2
