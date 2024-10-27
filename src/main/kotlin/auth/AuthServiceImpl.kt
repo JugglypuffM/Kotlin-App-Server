@@ -2,6 +2,7 @@ package auth
 
 import domain.AuthResult
 import domain.Person
+import domain.ResultCode
 import org.example.grpc.AuthProto.*
 import org.example.grpc.AuthServiceGrpc
 import io.grpc.stub.*
@@ -9,7 +10,7 @@ import io.grpc.stub.*
 class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrpc.AuthServiceImplBase() {
     private fun createAuthResponse(authResult: AuthResult): AuthResponse {
         return AuthResponse.newBuilder()
-            .setSuccess(authResult.success)
+            .setResultCode(authResult.resultCode.code)
             .setMessage(authResult.message)
             .build()
     }
@@ -18,12 +19,11 @@ class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrp
         try {
             val person = Person(request.name, request.login, request.password)
             val authResult = authenticator.register(person)
-            //TODO: запомнить факт логина где-нибудь в БД
 
             responseObserver.onNext(createAuthResponse(authResult))
         }
-        catch (e: IllegalArgumentException) {
-            responseObserver.onNext(createAuthResponse(AuthResult(false, "Invalid login or password.")))
+        catch (_: IllegalArgumentException) {
+            responseObserver.onNext(createAuthResponse(AuthResult(ResultCode.INVALID_CREDENTIALS, "Invalid login or password.")))
         }
         finally {
             responseObserver.onCompleted()
@@ -32,7 +32,6 @@ class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrp
 
     override fun login(request: LoginRequest, responseObserver: StreamObserver<AuthResponse>) {
         val authResult = authenticator.login(request.login, request.password)
-        //TODO: запомнить факт логина где-нибудь в БД
 
         responseObserver.onNext(createAuthResponse(authResult))
         responseObserver.onCompleted()

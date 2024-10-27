@@ -2,6 +2,7 @@ package auth
 
 import database.DatabaseMock
 import domain.Person
+import domain.ResultCode
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,7 +24,7 @@ class AuthenticatorTest {
 
         val result = authenticator.register(person)
 
-        assertTrue(result.success)
+        assertEquals(ResultCode.OPERATION_SUCCESS, result.resultCode)
         assertEquals("User successfully registered.", result.message)
         assertTrue(database.get("johndoe").isPresent)
         assertEquals(person, database.get("johndoe").get())
@@ -37,7 +38,7 @@ class AuthenticatorTest {
         authenticator.register(person1)
         val result = authenticator.register(person2)
 
-        assertFalse(result.success)
+        assertEquals(ResultCode.USER_ALREADY_EXISTS, result.resultCode)
         assertEquals("User already exists.", result.message)
         assertEquals(person1, database.get("johndoe").get())
     }
@@ -49,7 +50,7 @@ class AuthenticatorTest {
         authenticator.register(person)
         val result = authenticator.login("johndoe", "password123")
 
-        assertTrue(result.success)
+        assertEquals(ResultCode.OPERATION_SUCCESS, result.resultCode)
         assertEquals("User successfully logged in.", result.message)
     }
 
@@ -60,15 +61,15 @@ class AuthenticatorTest {
         authenticator.register(person)
         val result = authenticator.login("johndoe", "wrongpassword")
 
-        assertFalse(result.success)
-        assertEquals("Invalid login or password.", result.message)
+        assertEquals(ResultCode.INVALID_CREDENTIALS, result.resultCode)
+        assertEquals("Wrong login or password.", result.message)
     }
 
     @Test
     fun `should not login non-existing user`() {
         val result = authenticator.login("nonexisting", "somepassword")
 
-        assertFalse(result.success)
-        assertEquals("Invalid login or password.", result.message)
+        assertEquals(ResultCode.INVALID_CREDENTIALS, result.resultCode)
+        assertEquals("Wrong login or password.", result.message)
     }
 }
