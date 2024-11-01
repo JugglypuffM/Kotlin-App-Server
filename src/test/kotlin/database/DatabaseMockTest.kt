@@ -40,11 +40,11 @@ class DatabaseMockTest {
         database.add(account)
 
         // Обновляем пользователя
-        val updatedAccount = Account(login = "janesmith", password = "newpassword")
+        val updatedAccount = Account(login = "janedoe", password = "newpassword")
         database.update(account.login, updatedAccount)
 
         // Проверяем, что пользователь был обновлен
-        val retrievedPerson = database.get(updatedAccount.login)
+        val retrievedPerson = database.get(account.login)
         assertTrue(retrievedPerson.isPresent)
         assertEquals(updatedAccount, retrievedPerson.get())
     }

@@ -10,7 +10,7 @@ class Authenticator(private val database: Database<Account>) {
         if (database.get(account.login).isPresent) {
             return AuthResult(false, "User already exists.")
         }
-        database.add(account.login, account)
+        database.add(account)
         return AuthResult(true, "User successfully registered.")
     }
 

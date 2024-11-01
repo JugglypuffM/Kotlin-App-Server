@@ -16,7 +16,7 @@ class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrp
 
     override fun register(request: RegisterRequest, responseObserver: StreamObserver<AuthResponse>) {
         try {
-            val account = Account(request.name, request.login, request.password)
+            val account = Account(request.login, request.password)
             val authResult = authenticator.register(account)
             //TODO: запомнить факт логина где-нибудь в БД
 

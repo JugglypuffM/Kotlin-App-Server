@@ -19,7 +19,7 @@ class AuthenticatorTest {
 
     @Test
     fun `should register user successfully`() {
-        val account = Account(name = "John Doe", login = "johndoe", password = "password123")
+        val account = Account(login = "johndoe", password = "password123")
 
         val result = authenticator.register(account)
 
@@ -31,8 +31,8 @@ class AuthenticatorTest {
 
     @Test
     fun `should not register user with existing login`() {
-        val account1 = Account(name = "John Doe", login = "johndoe", password = "password123")
-        val account2 = Account(name = "Jane Doe", login = "johndoe", password = "password456")
+        val account1 = Account(login = "johndoe", password = "password123")
+        val account2 = Account(login = "johndoe", password = "password456")
 
         authenticator.register(account1)
         val result = authenticator.register(account2)
@@ -44,7 +44,7 @@ class AuthenticatorTest {
 
     @Test
     fun `should login user successfully`() {
-        val account = Account(name = "John Doe", login = "johndoe", password = "password123")
+        val account = Account(login = "johndoe", password = "password123")
 
         authenticator.register(account)
         val result = authenticator.login("johndoe", "password123")
@@ -55,7 +55,7 @@ class AuthenticatorTest {
 
     @Test
     fun `should not login with incorrect password`() {
-        val account = Account(name = "John Doe", login = "johndoe", password = "password123")
+        val account = Account(login = "johndoe", password = "password123")
 
         authenticator.register(account)
         val result = authenticator.login("johndoe", "wrongpassword")

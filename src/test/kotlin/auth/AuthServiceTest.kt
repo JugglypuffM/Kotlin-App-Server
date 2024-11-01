@@ -26,9 +26,8 @@ class AuthServiceTest {
 
     @Test
     fun `register - successful registration`() {
-        val account = Account("John Doe", "johndoe", "password123")
+        val account = Account( "johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(account.name)
             .setLogin(account.login)
             .setPassword(account.password)
             .build()
@@ -43,9 +42,8 @@ class AuthServiceTest {
 
     @Test
     fun `register - user already exists`() {
-        val account = Account("John Doe", "johndoe", "password123")
+        val account = Account("johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(account.name)
             .setLogin(account.login)
             .setPassword(account.password)
             .build()
@@ -61,7 +59,6 @@ class AuthServiceTest {
     @Test
     fun `register - invalid password (too short)`() {
         val request = RegisterRequest.newBuilder()
-            .setName("John Doe")
             .setLogin("johndoe")
             .setPassword("pass")
             .build()
