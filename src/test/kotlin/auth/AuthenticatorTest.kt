@@ -1,7 +1,7 @@
 package auth
 
 import database.DatabaseMock
-import domain.User
+import domain.Account
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,34 +19,34 @@ class AuthenticatorTest {
 
     @Test
     fun `should register user successfully`() {
-        val user = User(name = "John Doe", login = "johndoe", password = "password123")
+        val account = Account(name = "John Doe", login = "johndoe", password = "password123")
 
-        val result = authenticator.register(user)
+        val result = authenticator.register(account)
 
         assertTrue(result.success)
         assertEquals("User successfully registered.", result.message)
         assertTrue(database.get("johndoe").isPresent)
-        assertEquals(user, database.get("johndoe").get())
+        assertEquals(account, database.get("johndoe").get())
     }
 
     @Test
     fun `should not register user with existing login`() {
-        val user1 = User(name = "John Doe", login = "johndoe", password = "password123")
-        val user2 = User(name = "Jane Doe", login = "johndoe", password = "password456")
+        val account1 = Account(name = "John Doe", login = "johndoe", password = "password123")
+        val account2 = Account(name = "Jane Doe", login = "johndoe", password = "password456")
 
-        authenticator.register(user1)
-        val result = authenticator.register(user2)
+        authenticator.register(account1)
+        val result = authenticator.register(account2)
 
         assertFalse(result.success)
         assertEquals("User already exists.", result.message)
-        assertEquals(user1, database.get("johndoe").get())
+        assertEquals(account1, database.get("johndoe").get())
     }
 
     @Test
     fun `should login user successfully`() {
-        val user = User(name = "John Doe", login = "johndoe", password = "password123")
+        val account = Account(name = "John Doe", login = "johndoe", password = "password123")
 
-        authenticator.register(user)
+        authenticator.register(account)
         val result = authenticator.login("johndoe", "password123")
 
         assertTrue(result.success)
@@ -55,9 +55,9 @@ class AuthenticatorTest {
 
     @Test
     fun `should not login with incorrect password`() {
-        val user = User(name = "John Doe", login = "johndoe", password = "password123")
+        val account = Account(name = "John Doe", login = "johndoe", password = "password123")
 
-        authenticator.register(user)
+        authenticator.register(account)
         val result = authenticator.login("johndoe", "wrongpassword")
 
         assertFalse(result.success)

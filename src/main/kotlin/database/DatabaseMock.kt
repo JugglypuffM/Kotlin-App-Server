@@ -1,29 +1,27 @@
 package database
 
-import domain.User
+import domain.Account
 import java.util.Optional
+import java.util.Random
 
-class DatabaseMock : Database<User> {
-    private val data = mutableMapOf<String, User>()
+class DatabaseMock : Database<Account> {
+    private val data = mutableMapOf<String, Account>()
 
-    override fun get(id: String): Optional<User> {
-        return Optional.ofNullable(data[id])
+    override fun get(login: String): Optional<Account> {
+        return Optional.ofNullable(data[login])
     }
 
-    override fun add(id: String, entry: User) {
-        data[id] = entry
+    override fun add(entry: Account) {
+        data[entry.login] = entry
     }
 
-    override fun update(id: String, entry: User): Boolean {
-        return if (data.containsKey(id)) {
-            data[id] = entry
-            true
-        } else {
-            false
+    override fun update(login: String, entry: Account) {
+        if (data.containsKey(login)) {
+            data[login] = entry
         }
     }
 
-    override fun delete(id: String): Boolean {
-        return data.remove(id) != null
+    override fun delete(login: String) {
+        data.remove(login) != null
     }
 }

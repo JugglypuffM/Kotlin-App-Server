@@ -1,7 +1,7 @@
 package auth
 
 import domain.AuthResult
-import domain.User
+import domain.Account
 import io.mockk.*
 import io.grpc.stub.StreamObserver
 import org.example.grpc.AuthProto.AuthResponse
@@ -26,14 +26,14 @@ class AuthServiceTest {
 
     @Test
     fun `register - successful registration`() {
-        val user = User("John Doe", "johndoe", "password123")
+        val account = Account("John Doe", "johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(user.name)
-            .setLogin(user.login)
-            .setPassword(user.password)
+            .setName(account.name)
+            .setLogin(account.login)
+            .setPassword(account.password)
             .build()
 
-        every { authenticator.register(user) } returns AuthResult(true, "User successfully registered.")
+        every { authenticator.register(account) } returns AuthResult(true, "User successfully registered.")
 
         authService.register(request, responseObserver)
 
@@ -43,14 +43,14 @@ class AuthServiceTest {
 
     @Test
     fun `register - user already exists`() {
-        val user = User("John Doe", "johndoe", "password123")
+        val account = Account("John Doe", "johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(user.name)
-            .setLogin(user.login)
-            .setPassword(user.password)
+            .setName(account.name)
+            .setLogin(account.login)
+            .setPassword(account.password)
             .build()
 
-        every { authenticator.register(user) } returns AuthResult(false, "User already exists.")
+        every { authenticator.register(account) } returns AuthResult(false, "User already exists.")
 
         authService.register(request, responseObserver)
 

@@ -1,12 +1,12 @@
 package database
 
-import domain.User
+import domain.Account
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class DatabaseMockTest {
-    private lateinit var database: Database<User>
+    private lateinit var database: Database<Account>
 
     @BeforeEach
     fun setUp() {
@@ -15,16 +15,15 @@ class DatabaseMockTest {
 
     @Test
     fun testAddAndGetPerson() {
-        val user = User(name = "John Doe", login = "johndoe", password = "password123")
-        val id = "1"
+        val account = Account(login = "johndoe", password = "password123")
 
         // Добавляем пользователя
-        database.add(id, user)
+        database.add(account)
 
         // Проверяем, что пользователь был добавлен
-        val retrievedPerson = database.get(id)
+        val retrievedPerson = database.get(account.login)
         assertTrue(retrievedPerson.isPresent)
-        assertEquals(user, retrievedPerson.get())
+        assertEquals(account, retrievedPerson.get())
     }
 
     @Test
@@ -35,38 +34,33 @@ class DatabaseMockTest {
 
     @Test
     fun testUpdatePerson() {
-        val user = User(name = "Jane Doe", login = "janedoe", password = "password123")
-        val id = "2"
+        val account = Account(login = "janedoe", password = "password123")
 
         // Добавляем пользователя
-        database.add(id, user)
+        database.add(account)
 
         // Обновляем пользователя
-        val updatedUser = User(name = "Jane Smith", login = "janesmith", password = "newpassword")
-        val updateResult = database.update(id, updatedUser)
-
-        assertTrue(updateResult)
+        val updatedAccount = Account(login = "janesmith", password = "newpassword")
+        database.update(account.login, updatedAccount)
 
         // Проверяем, что пользователь был обновлен
-        val retrievedPerson = database.get(id)
+        val retrievedPerson = database.get(updatedAccount.login)
         assertTrue(retrievedPerson.isPresent)
-        assertEquals(updatedUser, retrievedPerson.get())
+        assertEquals(updatedAccount, retrievedPerson.get())
     }
 
     @Test
     fun testDeletePerson() {
-        val user = User(name = "Mark Twain", login = "marktwain", password = "password123")
-        val id = "3"
+        val account = Account(login = "marktwain", password = "password123")
 
         // Добавляем пользователя
-        database.add(id, user)
+        database.add(account)
 
         // Удаляем пользователя
-        val deleteResult = database.delete(id)
-        assertTrue(deleteResult)
+        database.delete(account.login)
 
         // Проверяем, что пользователь был удален
-        val retrievedPerson = database.get(id)
+        val retrievedPerson = database.get(account.login)
         assertFalse(retrievedPerson.isPresent)
     }
 }
