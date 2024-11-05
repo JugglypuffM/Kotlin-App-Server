@@ -1,6 +1,6 @@
 package auth
 
-import database.DatabaseMock
+import database.DbTableMock
 import domain.Account
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test
 
 class AuthenticatorTest {
 
-    private lateinit var database: DatabaseMock
+    private lateinit var database: DbTableMock
     private lateinit var authenticator: Authenticator
 
     @BeforeEach
     fun setUp() {
-        database = DatabaseMock()
+        database = DbTableMock()
         authenticator = Authenticator(database)
     }
 

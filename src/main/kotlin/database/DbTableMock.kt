@@ -2,9 +2,8 @@ package database
 
 import domain.Account
 import java.util.Optional
-import java.util.Random
 
-class DatabaseMock : Database<Account> {
+class DbTableMock : DatabaseTable<Account> {
     private val data = mutableMapOf<String, Account>()
 
     override fun get(login: String): Optional<Account> {

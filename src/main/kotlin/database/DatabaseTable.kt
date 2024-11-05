@@ -2,7 +2,7 @@ package database
 
 import java.util.*
 
-interface Database<T> {
+interface DatabaseTable<T> {
     /**
      * Получения записи из таблицы
      * @throws DatabaseException Ошибка обращения к бд

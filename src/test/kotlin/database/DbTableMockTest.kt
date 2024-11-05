@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class DatabaseMockTest {
-    private lateinit var database: Database<Account>
+class DbTableMockTest {
+    private lateinit var databaseTable: DatabaseTable<Account>
 
     @BeforeEach
     fun setUp() {
-        database = DatabaseMock()
+        databaseTable = DbTableMock()
     }
 
     @Test
@@ -18,17 +18,17 @@ class DatabaseMockTest {
         val account = Account(login = "johndoe", password = "password123")
 
         // Добавляем пользователя
-        database.add(account)
+        databaseTable.add(account)
 
         // Проверяем, что пользователь был добавлен
-        val retrievedPerson = database.get(account.login)
+        val retrievedPerson = databaseTable.get(account.login)
         assertTrue(retrievedPerson.isPresent)
         assertEquals(account, retrievedPerson.get())
     }
 
     @Test
     fun testGetNonExistentPerson() {
-        val retrievedPerson = database.get("nonExistentId")
+        val retrievedPerson = databaseTable.get("nonExistentId")
         assertFalse(retrievedPerson.isPresent)
     }
 
@@ -37,14 +37,14 @@ class DatabaseMockTest {
         val account = Account(login = "janedoe", password = "password123")
 
         // Добавляем пользователя
-        database.add(account)
+        databaseTable.add(account)
 
         // Обновляем пользователя
         val updatedAccount = Account(login = "janedoe", password = "newpassword")
-        database.update(account.login, updatedAccount)
+        databaseTable.update(account.login, updatedAccount)
 
         // Проверяем, что пользователь был обновлен
-        val retrievedPerson = database.get(account.login)
+        val retrievedPerson = databaseTable.get(account.login)
         assertTrue(retrievedPerson.isPresent)
         assertEquals(updatedAccount, retrievedPerson.get())
     }
@@ -54,13 +54,13 @@ class DatabaseMockTest {
         val account = Account(login = "marktwain", password = "password123")
 
         // Добавляем пользователя
-        database.add(account)
+        databaseTable.add(account)
 
         // Удаляем пользователя
-        database.delete(account.login)
+        databaseTable.delete(account.login)
 
         // Проверяем, что пользователь был удален
-        val retrievedPerson = database.get(account.login)
+        val retrievedPerson = databaseTable.get(account.login)
         assertFalse(retrievedPerson.isPresent)
     }
 }
