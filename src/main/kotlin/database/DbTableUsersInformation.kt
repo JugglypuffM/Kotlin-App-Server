@@ -3,11 +3,10 @@ package database
 import database.tables.UsersTable
 import domain.User
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class DbTableUsers : DatabaseTable<User> {
+class DbTableUsersInformation : DatabaseTable<User> {
     init {
         transaction {
             try {
@@ -30,20 +29,10 @@ class DbTableUsers : DatabaseTable<User> {
                         distance = entry[UsersTable.distance])
                 }
             } catch (e: Exception){
-                throw DatabaseException("Error fetching user with id: $id", e)
+                throw DatabaseTable.DatabaseException("Error fetching user with id: $id", e)
             }
         }
         return Optional.ofNullable(user)
-    }
-
-    override fun delete(login: String) {
-        transaction {
-            try {
-                UsersTable.deleteWhere { UsersTable.login.eq(login) }
-            } catch (e: Exception) {
-                throw DatabaseException("User not exist with id: $id", e)
-            }
-        }
     }
 
     override fun update(login: String, entry: User) {
@@ -56,10 +45,11 @@ class DbTableUsers : DatabaseTable<User> {
                     it[distance] = entry.distance
                 }
             } catch (e: Exception) {
-                throw DatabaseException("User not exist with id: $id", e)
+                throw DatabaseTable.DatabaseException("User not exist with id: $id", e)
             }
         }
     }
 
     override fun add(entry: User) {}
+    override fun delete(login: String) {}
 }

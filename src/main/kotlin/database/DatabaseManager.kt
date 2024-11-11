@@ -5,6 +5,9 @@ import domain.User
 import io.github.cdimascio.dotenv.dotenv
 import java.util.Optional
 
+/**
+ * Менеджер для выполнения запросов к базе данных
+ */
 object DatabaseManager {
     private val url = "jdbc:postgresql://localhost:${dotenv()["DB_PORT"]}/${dotenv()["DB_NAME"]}"
     private val dbUser = dotenv()["PSQL_USER"].toString()
@@ -19,34 +22,48 @@ object DatabaseManager {
             password = dbPassword
         )
         dbTableAccounts = DbTableAccounts()
-        dbTableUsers = DbTableUsers()
+        dbTableUsers = DbTableUsersInformation()
     }
 
-    fun addNewAccount(account: Account) {
+    /**
+     * Метод для внесения нового пользователя в базу данных
+     */
+    fun addAccount(account: Account) {
         dbTableAccounts.add(account)
     }
 
+    /**
+     * Метод для удаления всех данных о пользователе
+     */
     fun deleteAccount(login: String) {
         dbTableAccounts.delete(login)
     }
 
+    /**
+     * Метод для обновления учётной записи пользователя
+     */
     fun updateAccount(login: String, account: Account) {
         dbTableAccounts.update(login, account)
     }
 
+    /**
+     * Метод для получения учётной записи пользователя
+     */
     fun getAccount(login: String) : Optional<Account> {
         return dbTableAccounts.get(login)
     }
 
-    fun deleteUser(login: String) {
-        dbTableUsers.delete(login)
-    }
-
-    fun updateUser(login: String, user: User) {
+    /**
+     * Метод для обновления информации о пользователе
+     */
+    fun updateUserInformation(login: String, user: User) {
         dbTableUsers.update(login, user)
     }
 
-    fun getUser(login: String) : Optional<User> {
+    /**
+     * Метод для получения дополнительной информации об аккаунте пользователя
+     */
+    fun getUserInformation(login: String) : Optional<User> {
         return dbTableUsers.get(login)
     }
 }

@@ -3,6 +3,12 @@ package database
 import java.util.*
 
 interface DatabaseTable<T> {
+
+    /**
+     * Ошибка выполнения запросов к базе данных
+     */
+    class DatabaseException(message: String, cause: Throwable? = null) : Exception(message, cause)
+
     /**
      * Получения записи из таблицы
      * @throws DatabaseException Ошибка обращения к бд
@@ -24,5 +30,3 @@ interface DatabaseTable<T> {
      */
     fun delete(login: String)
 }
-
-class DatabaseException(message: String, cause: Throwable? = null) : Exception(message, cause)
