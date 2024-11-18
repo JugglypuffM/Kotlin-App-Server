@@ -13,6 +13,6 @@ data class Account(
     }
 
     override fun toString(): String {
-        return "domain.Person(login='$login', password='$password')"
+        return "domain.Account(login='$login', password='$password')"
     }
 }
