@@ -3,28 +3,28 @@ package data
 import database.manager.DatabaseManager
 import domain.UserInfo
 import grpc.DataProto
-import grpc.DataProto.BasicDataRequest
-import grpc.DataProto.BasicDataResponse
+import grpc.DataProto.UserDataRequest
+import grpc.DataProto.UserDataResponse
 import grpc.DataServiceGrpc
 import io.grpc.stub.StreamObserver
 
 class DataServiceImpl(private val databaseManager: DatabaseManager) : DataServiceGrpc.DataServiceImplBase() {
-    private fun createBasicDataResponse(success: Boolean, info: UserInfo): BasicDataResponse {
+    private fun createBasicDataResponse(success: Boolean, info: UserInfo): UserDataResponse {
         val data = DataProto.UserData.newBuilder()
             .setName(info.name)
             .setAge(info.age)
             .setWeight(info.weight)
             .setTotalDistance(info.distance)
             .build()
-        return BasicDataResponse.newBuilder()
+        return UserDataResponse.newBuilder()
             .setSuccess(success)
             .setData(data)
             .build()
     }
 
-    override fun getBasicUserData(
-        request: BasicDataRequest,
-        responseObserver: StreamObserver<BasicDataResponse>
+    override fun getUserData(
+        request: UserDataRequest,
+        responseObserver: StreamObserver<UserDataResponse>
     ) {
         databaseManager.getUserInformation(request.login).map<Unit> {
             responseObserver.onNext(createBasicDataResponse(true, it))
