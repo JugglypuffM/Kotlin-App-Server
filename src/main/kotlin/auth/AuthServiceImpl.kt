@@ -1,10 +1,12 @@
 package auth
 
 import domain.AuthResult
-import domain.Person
+import domain.User
 import domain.ResultCode
-import org.example.grpc.AuthProto.*
-import org.example.grpc.AuthServiceGrpc
+import grpc.AuthProto.AuthResponse
+import grpc.AuthProto.LoginRequest
+import grpc.AuthProto.RegisterRequest
+import grpc.AuthServiceGrpc
 import io.grpc.stub.*
 
 class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrpc.AuthServiceImplBase() {
@@ -17,8 +19,8 @@ class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrp
 
     override fun register(request: RegisterRequest, responseObserver: StreamObserver<AuthResponse>) {
         try {
-            val person = Person(request.name, request.login, request.password)
-            val authResult = authenticator.register(person)
+            val user = User(request.name, request.login, request.password)
+            val authResult = authenticator.register(user)
 
             responseObserver.onNext(createAuthResponse(authResult))
         }
