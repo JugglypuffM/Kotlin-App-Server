@@ -1,8 +1,8 @@
-package database
+package database.dao
 
 import java.util.*
 
-interface DatabaseTable<T> {
+interface DAO<T> {
 
     /**
      * Ошибка выполнения запросов к базе данных
