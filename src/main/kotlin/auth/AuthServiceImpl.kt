@@ -1,7 +1,7 @@
 package auth
 
 import domain.AuthResult
-import domain.Person
+import domain.Account
 import org.example.grpc.AuthProto.*
 import org.example.grpc.AuthServiceGrpc
 import io.grpc.stub.*
@@ -16,8 +16,8 @@ class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrp
 
     override fun register(request: RegisterRequest, responseObserver: StreamObserver<AuthResponse>) {
         try {
-            val person = Person(request.name, request.login, request.password)
-            val authResult = authenticator.register(person)
+            val account = Account(request.login, request.password)
+            val authResult = authenticator.register(account)
             //TODO: запомнить факт логина где-нибудь в БД
 
             responseObserver.onNext(createAuthResponse(authResult))

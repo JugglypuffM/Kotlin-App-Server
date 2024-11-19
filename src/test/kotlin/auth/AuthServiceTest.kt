@@ -1,7 +1,7 @@
 package auth
 
 import domain.AuthResult
-import domain.Person
+import domain.Account
 import io.mockk.*
 import io.grpc.stub.StreamObserver
 import org.example.grpc.AuthProto.AuthResponse
@@ -9,7 +9,6 @@ import org.example.grpc.AuthProto.LoginRequest
 import org.example.grpc.AuthProto.RegisterRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
 
 class AuthServiceTest {
 
@@ -27,14 +26,13 @@ class AuthServiceTest {
 
     @Test
     fun `register - successful registration`() {
-        val person = Person("John Doe", "johndoe", "password123")
+        val account = Account( "johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(person.name)
-            .setLogin(person.login)
-            .setPassword(person.password)
+            .setLogin(account.login)
+            .setPassword(account.password)
             .build()
 
-        every { authenticator.register(person) } returns AuthResult(true, "User successfully registered.")
+        every { authenticator.register(account) } returns AuthResult(true, "User successfully registered.")
 
         authService.register(request, responseObserver)
 
@@ -44,14 +42,13 @@ class AuthServiceTest {
 
     @Test
     fun `register - user already exists`() {
-        val person = Person("John Doe", "johndoe", "password123")
+        val account = Account("johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(person.name)
-            .setLogin(person.login)
-            .setPassword(person.password)
+            .setLogin(account.login)
+            .setPassword(account.password)
             .build()
 
-        every { authenticator.register(person) } returns AuthResult(false, "User already exists.")
+        every { authenticator.register(account) } returns AuthResult(false, "User already exists.")
 
         authService.register(request, responseObserver)
 
@@ -62,7 +59,6 @@ class AuthServiceTest {
     @Test
     fun `register - invalid password (too short)`() {
         val request = RegisterRequest.newBuilder()
-            .setName("John Doe")
             .setLogin("johndoe")
             .setPassword("pass")
             .build()
