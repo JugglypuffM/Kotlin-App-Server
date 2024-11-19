@@ -125,6 +125,35 @@
     </build>
 
     <dependencies>
+        <!-- Библиотека Dotenv для работы с переменными среды -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+
+        <!-- Библиотека Exposed - ORM для бд -->
+        <dependency>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-jdbc</artifactId>
+            <version>0.55.0</version>
+        </dependency>
+
+        <!-- Библиотека для логирования -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>2.0.0-alpha0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Драйвер для работы с Postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
+        </dependency>
+
         <!-- Библиотека Kotlin для тестирования -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
