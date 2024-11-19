@@ -6,8 +6,10 @@ import domain.ResultCode
 import grpc.AuthProto.AuthResponse
 import grpc.AuthProto.LoginRequest
 import grpc.AuthProto.RegisterRequest
-import io.mockk.*
 import io.grpc.stub.StreamObserver
+import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

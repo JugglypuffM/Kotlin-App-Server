@@ -12,7 +12,7 @@ class Authenticator(private val databaseManager: DatabaseManager) {
         try {
             databaseManager.addAccount(account)
             return AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully registered.")
-        }catch (e: DatabaseException) {
+        }catch (_: DatabaseException) {
             return AuthResult(ResultCode.USER_ALREADY_EXISTS, "User already exists.")
         }
     }
