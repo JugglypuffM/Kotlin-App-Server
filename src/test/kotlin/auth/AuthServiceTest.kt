@@ -2,6 +2,7 @@ package auth
 
 import domain.AuthResult
 import domain.Account
+import domain.ResultCode
 import io.mockk.*
 import io.grpc.stub.StreamObserver
 import org.example.grpc.AuthProto.AuthResponse
@@ -32,11 +33,11 @@ class AuthServiceTest {
             .setPassword(account.password)
             .build()
 
-        every { authenticator.register(account) } returns AuthResult(true, "User successfully registered.")
+        every { authenticator.register(account) } returns AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully registered.")
 
         authService.register(request, responseObserver)
 
-        verify { responseObserver.onNext(AuthResponse.newBuilder().setSuccess(true).setMessage("User successfully registered.").build()) }
+        verify { responseObserver.onNext(AuthResponse.newBuilder().setResultCode(0).setMessage("User successfully registered.").build()) }
         verify { responseObserver.onCompleted() }
     }
 
@@ -48,11 +49,11 @@ class AuthServiceTest {
             .setPassword(account.password)
             .build()
 
-        every { authenticator.register(account) } returns AuthResult(false, "User already exists.")
+        every { authenticator.register(account) } returns AuthResult(ResultCode.USER_ALREADY_EXISTS, "User already exists.")
 
         authService.register(request, responseObserver)
 
-        verify { responseObserver.onNext(AuthResponse.newBuilder().setSuccess(false).setMessage("User already exists.").build()) }
+        verify { responseObserver.onNext(AuthResponse.newBuilder().setResultCode(1).setMessage("User already exists.").build()) }
         verify { responseObserver.onCompleted() }
     }
 
@@ -67,7 +68,7 @@ class AuthServiceTest {
 
         verify {
             responseObserver.onNext(AuthResponse.newBuilder()
-                .setSuccess(false)
+                .setResultCode(2)
                 .setMessage("Invalid login or password.")
                 .build())
         }
@@ -83,11 +84,11 @@ class AuthServiceTest {
             .setPassword(password)
             .build()
 
-        every { authenticator.login(login, password) } returns AuthResult(true, "User successfully logged in.")
+        every { authenticator.login(login, password) } returns AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully logged in.")
 
         authService.login(request, responseObserver)
 
-        verify { responseObserver.onNext(AuthResponse.newBuilder().setSuccess(true).setMessage("User successfully logged in.").build()) }
+        verify { responseObserver.onNext(AuthResponse.newBuilder().setResultCode(0).setMessage("User successfully logged in.").build()) }
         verify { responseObserver.onCompleted() }
     }
 
@@ -100,11 +101,11 @@ class AuthServiceTest {
             .setPassword(password)
             .build()
 
-        every { authenticator.login(login, password) } returns AuthResult(false, "Invalid login or password.")
+        every { authenticator.login(login, password) } returns AuthResult(ResultCode.INVALID_CREDENTIALS, "Wrong login or password.")
 
         authService.login(request, responseObserver)
 
-        verify { responseObserver.onNext(AuthResponse.newBuilder().setSuccess(false).setMessage("Invalid login or password.").build()) }
+        verify { responseObserver.onNext(AuthResponse.newBuilder().setResultCode(2).setMessage("Wrong login or password.").build()) }
         verify { responseObserver.onCompleted() }
     }
 }
