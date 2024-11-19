@@ -12,9 +12,8 @@
         <!-- Общие свойства проекта -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.code.style>official</kotlin.code.style>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <kotlin.version>2.0.20</kotlin.version>
         <grpc.version>1.55.1</grpc.version>
         <protobuf.version>4.28.2</protobuf.version>
@@ -65,7 +64,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>11</jvmTarget>
+                    <jvmTarget>${maven.compiler.target}</jvmTarget>
                 </configuration>
             </plugin>
 
@@ -94,8 +93,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
 
@@ -154,6 +153,14 @@
             <version>42.7.4</version>
         </dependency>
 
+        <!-- Стандартная библиотека Kotlin -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+
         <!-- Библиотека Kotlin для тестирования -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -168,13 +175,6 @@
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.0</version>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Библиотека Kotlin стандартной библиотеки -->
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
         </dependency>
 
         <!-- gRPC Netty для транспортного уровня -->
