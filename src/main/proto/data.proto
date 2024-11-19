@@ -14,5 +14,12 @@ message BasicDataRequest{
 
 message BasicDataResponse{
   bool success = 1;
-  string name = 2;
+  UserData data = 2;
+}
+
+message UserData {
+  string name = 1;
+  int32 age = 2;
+  int32 weight = 3;
+  int32 total_distance = 4;
 }

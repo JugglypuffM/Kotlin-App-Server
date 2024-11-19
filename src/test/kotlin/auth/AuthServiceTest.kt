@@ -1,7 +1,7 @@
 package auth
 
+import domain.Account
 import domain.AuthResult
-import domain.User
 import domain.ResultCode
 import grpc.AuthProto.AuthResponse
 import grpc.AuthProto.LoginRequest
@@ -27,14 +27,13 @@ class AuthServiceTest {
 
     @Test
     fun `register - successful registration`() {
-        val user = User("John Doe", "johndoe", "password123")
+        val account = Account("johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(user.name)
-            .setLogin(user.login)
-            .setPassword(user.password)
+            .setLogin(account.login)
+            .setPassword(account.password)
             .build()
 
-        every { authenticator.register(user) } returns AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully registered.")
+        every { authenticator.register(account) } returns AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully registered.")
 
         authService.register(request, responseObserver)
 
@@ -44,14 +43,13 @@ class AuthServiceTest {
 
     @Test
     fun `register - user already exists`() {
-        val user = User("John Doe", "johndoe", "password123")
+        val account = Account("johndoe", "password123")
         val request = RegisterRequest.newBuilder()
-            .setName(user.name)
-            .setLogin(user.login)
-            .setPassword(user.password)
+            .setLogin(account.login)
+            .setPassword(account.password)
             .build()
 
-        every { authenticator.register(user) } returns AuthResult(ResultCode.USER_ALREADY_EXISTS, "User already exists.")
+        every { authenticator.register(account) } returns AuthResult(ResultCode.USER_ALREADY_EXISTS, "User already exists.")
 
         authService.register(request, responseObserver)
 
@@ -62,7 +60,6 @@ class AuthServiceTest {
     @Test
     fun `register - invalid password (too short)`() {
         val request = RegisterRequest.newBuilder()
-            .setName("John Doe")
             .setLogin("johndoe")
             .setPassword("pass")
             .build()

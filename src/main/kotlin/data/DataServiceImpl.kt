@@ -1,20 +1,24 @@
 package data
 
-import auth.Authenticator
-import database.Database
-import domain.ResultCode
-import domain.User
+import database.manager.DatabaseManager
+import domain.UserInfo
+import grpc.DataProto
 import grpc.DataProto.BasicDataRequest
 import grpc.DataProto.BasicDataResponse
 import grpc.DataServiceGrpc
 import io.grpc.stub.StreamObserver
 
-class DataServiceImpl(val authenticator: Authenticator, val userDatabase: Database<User>) :
-    DataServiceGrpc.DataServiceImplBase() {
-    private fun createBasicDataResponse(success: Boolean, name: String): BasicDataResponse {
+class DataServiceImpl(private val databaseManager: DatabaseManager) : DataServiceGrpc.DataServiceImplBase() {
+    private fun createBasicDataResponse(success: Boolean, info: UserInfo): BasicDataResponse {
+        val data = DataProto.UserData.newBuilder()
+            .setName(info.name)
+            .setAge(info.age)
+            .setWeight(info.weight)
+            .setTotalDistance(info.distance)
+            .build()
         return BasicDataResponse.newBuilder()
             .setSuccess(success)
-            .setName(name)
+            .setData(data)
             .build()
     }
 
@@ -22,14 +26,9 @@ class DataServiceImpl(val authenticator: Authenticator, val userDatabase: Databa
         request: BasicDataRequest,
         responseObserver: StreamObserver<BasicDataResponse>
     ) {
-        val authResult = authenticator.login(request.login, request.password)
-        when (authResult.resultCode) {
-            ResultCode.OPERATION_SUCCESS, ResultCode.USER_ALREADY_EXISTS ->
-                responseObserver.onNext(createBasicDataResponse(true, userDatabase.get(request.login).get().name))
-
-            ResultCode.INVALID_CREDENTIALS ->
-                responseObserver.onNext(createBasicDataResponse(false, ""))
-        }
+        databaseManager.getUserInformation(request.login).map<Unit> {
+            responseObserver.onNext(createBasicDataResponse(true, it))
+        }.orElse(responseObserver.onNext(createBasicDataResponse(false, UserInfo("", 0, 0, 0))))
         responseObserver.onCompleted()
     }
 }

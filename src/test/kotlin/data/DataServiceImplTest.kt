@@ -1,9 +1,10 @@
 package data
 
 import auth.Authenticator
-import database.Database
-import domain.ResultCode
-import domain.User
+import database.dao.DAO
+import database.manager.DatabaseManager
+import domain.UserInfo
+import grpc.DataProto
 import grpc.DataProto.BasicDataRequest
 import grpc.DataProto.BasicDataResponse
 import io.grpc.stub.StreamObserver
@@ -17,16 +18,16 @@ import java.util.Optional
 class DataServiceImplTest {
 
     private lateinit var authenticator: Authenticator
-    private lateinit var userDatabase: Database<User>
+    private lateinit var databaseManagerMock: DatabaseManager
     private lateinit var dataServiceImpl: DataServiceImpl
     private lateinit var responseObserver: StreamObserver<BasicDataResponse>
 
     @BeforeEach
     fun setUp() {
         authenticator = mockk()
-        userDatabase = mockk()
+        databaseManagerMock = mockk()
         responseObserver = mockk(relaxed = true)
-        dataServiceImpl = DataServiceImpl(authenticator, userDatabase)
+        dataServiceImpl = DataServiceImpl(databaseManagerMock)
     }
 
     @Test
@@ -35,14 +36,20 @@ class DataServiceImplTest {
             .setLogin("testUser")
             .setPassword("testPass")
             .build()
-        val user = User("testName", "testUser", "testPass")
+        val userInfo = UserInfo("testName", 20, 80, 100)
 
-        every { authenticator.login("testUser", "testPass").resultCode } returns ResultCode.OPERATION_SUCCESS
-        every { userDatabase.get("testUser") } returns Optional.of(user)
+        val expectedData = DataProto.UserData.newBuilder()
+            .setName("testName")
+            .setAge(20)
+            .setWeight(80)
+            .setTotalDistance(100)
+            .build()
+
+        every { databaseManagerMock.getUserInformation("testUser") } returns Optional.of(userInfo)
 
         dataServiceImpl.getBasicUserData(request, responseObserver)
 
-        verify {responseObserver.onNext(BasicDataResponse.newBuilder().setSuccess(true).setName("testName").build()) }
+        verify {responseObserver.onNext(BasicDataResponse.newBuilder().setSuccess(true).setData(expectedData).build()) }
         verify {responseObserver.onCompleted() }
     }
 
@@ -53,11 +60,18 @@ class DataServiceImplTest {
             .setPassword("wrongPass")
             .build()
 
-        every { authenticator.login("testUser", "wrongPass").resultCode } returns ResultCode.INVALID_CREDENTIALS
+        val expectedData = DataProto.UserData.newBuilder()
+            .setName("")
+            .setAge(0)
+            .setWeight(0)
+            .setTotalDistance(0)
+            .build()
+
+        every { databaseManagerMock.getUserInformation("testUser") } returns Optional.empty<UserInfo>()
 
         dataServiceImpl.getBasicUserData(request, responseObserver)
 
-        verify {responseObserver.onNext(BasicDataResponse.newBuilder().setSuccess(false).setName("").build()) }
+        verify {responseObserver.onNext(BasicDataResponse.newBuilder().setSuccess(false).setData(expectedData).build()) }
         verify {responseObserver.onCompleted() }
     }
 }

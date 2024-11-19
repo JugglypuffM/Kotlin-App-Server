@@ -1,53 +1,58 @@
 package auth
 
-import database.DatabaseMock
-import domain.User
+import database.dao.DAO.DatabaseException
+import database.manager.DatabaseManager
+import domain.Account
 import domain.ResultCode
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Optional
 
 class AuthenticatorTest {
 
-    private lateinit var database: DatabaseMock
+    private lateinit var databaseManager: DatabaseManager
     private lateinit var authenticator: Authenticator
 
     @BeforeEach
     fun setUp() {
-        database = DatabaseMock()
-        authenticator = Authenticator(database)
+        databaseManager = mockk()
+        authenticator = Authenticator(databaseManager)
     }
 
     @Test
     fun `should register user successfully`() {
-        val user = User(name = "John Doe", login = "johndoe", password = "password123")
+        val account = Account(login = "c", password = "password123")
 
-        val result = authenticator.register(user)
+        every { databaseManager.addAccount(account) } returns Unit
+
+        val result = authenticator.register(account)
 
         assertEquals(ResultCode.OPERATION_SUCCESS, result.resultCode)
         assertEquals("User successfully registered.", result.message)
-        assertTrue(database.get("johndoe").isPresent)
-        assertEquals(user, database.get("johndoe").get())
     }
 
     @Test
     fun `should not register user with existing login`() {
-        val user1 = User(name = "John Doe", login = "johndoe", password = "password123")
-        val user2 = User(name = "Jane Doe", login = "johndoe", password = "password456")
+        val account = Account(login = "johndoe", password = "password123")
 
-        authenticator.register(user1)
-        val result = authenticator.register(user2)
+        every { databaseManager.addAccount(account) } throws DatabaseException("")
+
+        val result = authenticator.register(account)
 
         assertEquals(ResultCode.USER_ALREADY_EXISTS, result.resultCode)
         assertEquals("User already exists.", result.message)
-        assertEquals(user1, database.get("johndoe").get())
     }
 
     @Test
     fun `should login user successfully`() {
-        val user = User(name = "John Doe", login = "johndoe", password = "password123")
+        val account = Account(login = "johndoe", password = "password123")
 
-        authenticator.register(user)
+        every { databaseManager.getAccount(account.login) } returns Optional.of(account)
+
         val result = authenticator.login("johndoe", "password123")
 
         assertEquals(ResultCode.OPERATION_SUCCESS, result.resultCode)
@@ -56,9 +61,10 @@ class AuthenticatorTest {
 
     @Test
     fun `should not login with incorrect password`() {
-        val user = User(name = "John Doe", login = "johndoe", password = "password123")
+        val account = Account(login = "johndoe", password = "password123")
 
-        authenticator.register(user)
+        every { databaseManager.getAccount(account.login) } returns Optional.of(account)
+
         val result = authenticator.login("johndoe", "wrongpassword")
 
         assertEquals(ResultCode.INVALID_CREDENTIALS, result.resultCode)
@@ -67,6 +73,10 @@ class AuthenticatorTest {
 
     @Test
     fun `should not login non-existing user`() {
+        val account = Account(login = "nonexisting", password = "somepassword")
+
+        every { databaseManager.getAccount(account.login) } returns Optional.empty<Account>()
+
         val result = authenticator.login("nonexisting", "somepassword")
 
         assertEquals(ResultCode.INVALID_CREDENTIALS, result.resultCode)

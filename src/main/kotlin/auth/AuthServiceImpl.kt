@@ -1,7 +1,7 @@
 package auth
 
 import domain.AuthResult
-import domain.User
+import domain.Account
 import domain.ResultCode
 import grpc.AuthProto.AuthResponse
 import grpc.AuthProto.LoginRequest
@@ -19,8 +19,8 @@ class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrp
 
     override fun register(request: RegisterRequest, responseObserver: StreamObserver<AuthResponse>) {
         try {
-            val user = User(request.name, request.login, request.password)
-            val authResult = authenticator.register(user)
+            val account = Account(request.login, request.password)
+            val authResult = authenticator.register(account)
 
             responseObserver.onNext(createAuthResponse(authResult))
         }
