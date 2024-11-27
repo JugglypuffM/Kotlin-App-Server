@@ -3,8 +3,10 @@ package auth
 import domain.AuthResult
 import domain.Account
 import domain.ResultCode
-import org.example.grpc.AuthProto.*
-import org.example.grpc.AuthServiceGrpc
+import grpc.AuthProto.AuthResponse
+import grpc.AuthProto.LoginRequest
+import grpc.AuthProto.RegisterRequest
+import grpc.AuthServiceGrpc
 import io.grpc.stub.*
 
 class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrpc.AuthServiceImplBase() {

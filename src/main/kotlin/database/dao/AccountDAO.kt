@@ -1,4 +1,4 @@
-package database
+package database.dao
 
 
 import database.tables.UsersTable
@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 
-class DbTableAccounts : DatabaseTable<Account>{
+class AccountDAO : DAO<Account> {
 
     init {
         transaction {
@@ -29,7 +29,7 @@ class DbTableAccounts : DatabaseTable<Account>{
                     account = Account(entry[UsersTable.login], entry[UsersTable.password])
                 }
             } catch (e: Exception){
-                throw DatabaseTable.DatabaseException("Error fetching user with id: $id", e)
+                throw DAO.DatabaseException("Error fetching user with id: $id", e)
             }
         }
         return Optional.ofNullable(account)
@@ -40,7 +40,7 @@ class DbTableAccounts : DatabaseTable<Account>{
             try {
                 UsersTable.deleteWhere { UsersTable.login.eq(login) }
             } catch (e: Exception) {
-                throw DatabaseTable.DatabaseException("User not exist with id: $id", e)
+                throw DAO.DatabaseException("User not exist with id: $id", e)
             }
         }
     }
@@ -53,7 +53,7 @@ class DbTableAccounts : DatabaseTable<Account>{
                     it[password] = entry.password
                 }
             } catch (e: Exception) {
-                throw DatabaseTable.DatabaseException("User not exist with id: $id", e)
+                throw DAO.DatabaseException("User not exist with id: $id", e)
             }
         }
     }
@@ -66,7 +66,7 @@ class DbTableAccounts : DatabaseTable<Account>{
                     it[password] = entry.password
                 }
             } catch (e: Exception) {
-                throw DatabaseTable.DatabaseException("Error adding user with id: $id", e)
+                throw DAO.DatabaseException("Error adding user with id: $id", e)
             }
         }
     }

@@ -1,69 +1,73 @@
-package database
+package database.manager
 
+import database.dao.DAO
+import database.dao.AccountDAO
+import database.dao.UserInformationDAO
 import domain.Account
-import domain.User
+import domain.UserInfo
 import io.github.cdimascio.dotenv.dotenv
+import org.jetbrains.exposed.sql.Database
 import java.util.Optional
 
 /**
- * Менеджер для выполнения запросов к базе данных
+ * Реализация менеджера для выполнения запросов к базе данных через Exposed-ORM
  */
-object DatabaseManager {
+object DatabaseManagerService: DatabaseManager {
     private val url = "jdbc:postgresql://localhost:${dotenv()["DB_PORT"]}/${dotenv()["DB_NAME"]}"
     private val dbUser = dotenv()["PSQL_USER"].toString()
     private val dbPassword = dotenv()["PSQL_PASS"].toString()
-    private val dbTableAccounts : DatabaseTable<Account>
-    private val dbTableUsers : DatabaseTable<User>
+    private val dbTableAccounts : DAO<Account>
+    private val dbTableUsers : DAO<UserInfo>
     init {
-        org.jetbrains.exposed.sql.Database.connect(
+        Database.connect(
             url = url,
             driver = "org.postgresql.Driver",
             user = dbUser,
             password = dbPassword
         )
-        dbTableAccounts = DbTableAccounts()
-        dbTableUsers = DbTableUsersInformation()
+        dbTableAccounts = AccountDAO()
+        dbTableUsers = UserInformationDAO()
     }
 
     /**
      * Метод для внесения нового пользователя в базу данных
      */
-    fun addAccount(account: Account) {
+    override fun addAccount(account: Account) {
         dbTableAccounts.add(account)
     }
 
     /**
      * Метод для удаления всех данных о пользователе
      */
-    fun deleteAccount(login: String) {
+    override fun deleteAccount(login: String) {
         dbTableAccounts.delete(login)
     }
 
     /**
      * Метод для обновления учётной записи пользователя
      */
-    fun updateAccount(login: String, account: Account) {
+    override fun updateAccount(login: String, account: Account) {
         dbTableAccounts.update(login, account)
     }
 
     /**
      * Метод для получения учётной записи пользователя
      */
-    fun getAccount(login: String) : Optional<Account> {
+    override fun getAccount(login: String) : Optional<Account> {
         return dbTableAccounts.get(login)
     }
 
     /**
      * Метод для обновления информации о пользователе
      */
-    fun updateUserInformation(login: String, user: User) {
-        dbTableUsers.update(login, user)
+    override fun updateUserInformation(login: String, userInfo: UserInfo) {
+        dbTableUsers.update(login, userInfo)
     }
 
     /**
      * Метод для получения дополнительной информации об аккаунте пользователя
      */
-    fun getUserInformation(login: String) : Optional<User> {
+    override fun getUserInformation(login: String) : Optional<UserInfo> {
         return dbTableUsers.get(login)
     }
 }

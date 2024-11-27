@@ -1,13 +1,15 @@
 package auth
 
-import domain.AuthResult
 import domain.Account
+import domain.AuthResult
 import domain.ResultCode
-import io.mockk.*
+import grpc.AuthProto.AuthResponse
+import grpc.AuthProto.LoginRequest
+import grpc.AuthProto.RegisterRequest
 import io.grpc.stub.StreamObserver
-import org.example.grpc.AuthProto.AuthResponse
-import org.example.grpc.AuthProto.LoginRequest
-import org.example.grpc.AuthProto.RegisterRequest
+import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -27,7 +29,7 @@ class AuthServiceTest {
 
     @Test
     fun `register - successful registration`() {
-        val account = Account( "johndoe", "password123")
+        val account = Account("johndoe", "password123")
         val request = RegisterRequest.newBuilder()
             .setLogin(account.login)
             .setPassword(account.password)

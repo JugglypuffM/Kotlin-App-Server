@@ -1,12 +1,12 @@
-package database
+package database.dao
 
 import database.tables.UsersTable
-import domain.User
+import domain.UserInfo
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class DbTableUsersInformation : DatabaseTable<User> {
+class UserInformationDAO : DAO<UserInfo> {
     init {
         transaction {
             try {
@@ -17,25 +17,25 @@ class DbTableUsersInformation : DatabaseTable<User> {
         }
     }
 
-    override fun get(login: String): Optional<User> {
-        var user: User? = null
+    override fun get(login: String): Optional<UserInfo> {
+        var userInfo: UserInfo? = null
         transaction {
             try {
                 for (entry in UsersTable.selectAll().where { UsersTable.login.eq(login) }) {
-                    user = User(
+                    userInfo = UserInfo(
                         name = entry[UsersTable.name],
                         age = entry[UsersTable.age],
                         weight = entry[UsersTable.weight],
                         distance = entry[UsersTable.distance])
                 }
             } catch (e: Exception){
-                throw DatabaseTable.DatabaseException("Error fetching user with id: $id", e)
+                throw DAO.DatabaseException("Error fetching user with id: $id", e)
             }
         }
-        return Optional.ofNullable(user)
+        return Optional.ofNullable(userInfo)
     }
 
-    override fun update(login: String, entry: User) {
+    override fun update(login: String, entry: UserInfo) {
         transaction {
             try {
                 UsersTable.update({ UsersTable.login.eq(login)}) {
@@ -45,11 +45,11 @@ class DbTableUsersInformation : DatabaseTable<User> {
                     it[distance] = entry.distance
                 }
             } catch (e: Exception) {
-                throw DatabaseTable.DatabaseException("User not exist with id: $id", e)
+                throw DAO.DatabaseException("User not exist with id: $id", e)
             }
         }
     }
 
-    override fun add(entry: User) {}
+    override fun add(entry: UserInfo) {}
     override fun delete(login: String) {}
 }

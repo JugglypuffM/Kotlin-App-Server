@@ -1,15 +1,16 @@
 import auth.AuthServiceImpl
 import auth.Authenticator
-import database.DbTableMock
+import data.DataServiceImpl
+import database.manager.DatabaseManagerService
 import io.grpc.Server
 import io.grpc.ServerBuilder
 
 fun main() {
-    val database = DbTableMock()
-    val authenticator = Authenticator(database)
+    val authenticator = Authenticator(DatabaseManagerService)
 
     val server: Server = ServerBuilder.forPort(50051)
         .addService(AuthServiceImpl(authenticator))
+        .addService(DataServiceImpl(DatabaseManagerService))
         .build()
         .start()
 

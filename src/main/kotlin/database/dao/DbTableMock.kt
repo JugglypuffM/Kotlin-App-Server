@@ -1,9 +1,10 @@
-package database
+package database.dao
 
 import domain.Account
 import java.util.Optional
 
-class DbTableMock : DatabaseTable<Account> {
+@Deprecated("Mock for whole DatabaseManager should be implemented instead")
+class DbTableMock : DAO<Account> {
     private val data = mutableMapOf<String, Account>()
 
     override fun get(login: String): Optional<Account> {

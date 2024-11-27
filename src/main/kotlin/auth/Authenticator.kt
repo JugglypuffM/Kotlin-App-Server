@@ -1,28 +1,29 @@
 package auth
 
-import database.DatabaseTable
-import domain.AuthResult
+import database.dao.DAO.DatabaseException
+import database.manager.DatabaseManager
 import domain.Account
+import domain.AuthResult
 import domain.ResultCode
 
-class Authenticator(private val databaseTable: DatabaseTable<Account>) {
+class Authenticator(private val databaseManager: DatabaseManager) {
 
     fun register(account: Account): AuthResult {
-        if (databaseTable.get(account.login).isPresent) {
+        try {
+            databaseManager.addAccount(account)
+            return AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully registered.")
+        }catch (_: DatabaseException) {
             return AuthResult(ResultCode.USER_ALREADY_EXISTS, "User already exists.")
         }
-        databaseTable.add(account)
-        return AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully registered.")
     }
 
-    fun login(login: String, password: String): AuthResult {
-        val personOpt = databaseTable.get(login)
-        if (personOpt.isPresent) {
-            val person = personOpt.get()
-            if (person.password == password) {
-                return AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully logged in.")
-            }
-        }
-        return AuthResult(ResultCode.INVALID_CREDENTIALS, "Wrong login or password.")
-    }
+    fun login(login: String, password: String): AuthResult =
+        databaseManager.getAccount(login).map<AuthResult> {
+            if (it.password == password) {
+                AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully logged in.")
+            } else null
+        }.orElse(
+            AuthResult(ResultCode.INVALID_CREDENTIALS, "Wrong login or password.")
+        )
+
 }
