@@ -39,8 +39,9 @@ message SaveRequest {
 message TrainingsRequest{
   string login = 1;
   string password = 2;
+  google.protobuf.Timestamp date = 3;
 }
 
 message TrainingsResponse{
-  repeated string trainings = 1;
+  repeated Training trainings = 1;
 }
