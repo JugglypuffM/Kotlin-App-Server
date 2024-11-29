@@ -9,6 +9,7 @@ import grpc.TrainingServiceGrpc
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import services.auth.Authenticator
+import java.time.LocalDate
 import java.util.Optional
 
 class TrainingServiceImpl(private val authenticator: Authenticator, private val databaseManager: DatabaseManager) :
@@ -49,6 +50,20 @@ class TrainingServiceImpl(private val authenticator: Authenticator, private val 
         request: TrainingProto.TrainingsRequest,
         responseObserver: StreamObserver<TrainingProto.TrainingsResponse>
     ) {
-        super.getTrainings(request, responseObserver)
+        when (authenticator.login(request.login, request.password).resultCode) {
+            ResultCode.OPERATION_SUCCESS -> {
+                val trainings =
+                    databaseManager.getTrainingsOnDate(request.login, LocalDate.ofEpochDay(request.date.seconds))
+                val protoTrainings = trainings.map { it.toTrainingProto() }
+                responseObserver.onNext(
+                    TrainingProto.TrainingsResponse.newBuilder().addAllTrainings(protoTrainings).build()
+                )
+            }
+
+            else -> responseObserver.onError(
+                Status.UNAUTHENTICATED.withDescription("Invalid credentials").asRuntimeException()
+            )
+        }
+        responseObserver.onCompleted()
     }
 }
