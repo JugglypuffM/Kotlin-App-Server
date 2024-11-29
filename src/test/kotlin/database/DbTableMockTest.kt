@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
+@Deprecated("Testing the database in memory is enough")
 class DbTableMockTest {
     private lateinit var AccountDAO: DAO<Account>
 

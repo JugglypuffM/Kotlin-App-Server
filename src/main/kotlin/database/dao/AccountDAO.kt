@@ -29,7 +29,7 @@ class AccountDAO : DAO<Account> {
                     account = Account(entry[UsersTable.login], entry[UsersTable.password])
                 }
             } catch (e: Exception){
-                throw DAO.DatabaseException("Error fetching user with id: $id", e)
+                throw DAO.DatabaseException("Error fetching account with login: $login", e)
             }
         }
         return Optional.ofNullable(account)
@@ -40,7 +40,7 @@ class AccountDAO : DAO<Account> {
             try {
                 UsersTable.deleteWhere { UsersTable.login.eq(login) }
             } catch (e: Exception) {
-                throw DAO.DatabaseException("User not exist with id: $id", e)
+                throw DAO.DatabaseException("Account not exist with login: $login", e)
             }
         }
     }
@@ -53,7 +53,7 @@ class AccountDAO : DAO<Account> {
                     it[password] = entry.password
                 }
             } catch (e: Exception) {
-                throw DAO.DatabaseException("User not exist with id: $id", e)
+                throw DAO.DatabaseException("User not exist with login: $login", e)
             }
         }
     }
@@ -66,7 +66,7 @@ class AccountDAO : DAO<Account> {
                     it[password] = entry.password
                 }
             } catch (e: Exception) {
-                throw DAO.DatabaseException("Error adding user with id: $id", e)
+                throw DAO.DatabaseException("Error adding account: $entry", e)
             }
         }
     }
