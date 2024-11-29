@@ -1,6 +1,6 @@
 package database.dao
 
-import domain.Account
+import domain.user.Account
 import java.util.Optional
 
 @Deprecated("Mock for whole DatabaseManager should be implemented instead")

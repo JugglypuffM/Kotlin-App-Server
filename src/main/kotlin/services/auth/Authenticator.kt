@@ -1,10 +1,10 @@
-package auth
+package services.auth
 
 import database.dao.DAO.DatabaseException
 import database.manager.DatabaseManager
-import domain.Account
-import domain.AuthResult
-import domain.ResultCode
+import domain.user.Account
+import domain.auth.AuthResult
+import domain.auth.ResultCode
 
 class Authenticator(private val databaseManager: DatabaseManager) {
 

@@ -1,4 +1,4 @@
-package domain
+package domain.auth
 
 /**
  * Результат аутентификации

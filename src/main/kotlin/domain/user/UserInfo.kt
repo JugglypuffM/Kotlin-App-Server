@@ -1,4 +1,4 @@
-package domain
+package domain.user
 
 /**
  * Класс с информацией о пользователе

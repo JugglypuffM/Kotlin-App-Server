@@ -3,8 +3,8 @@ package database.manager
 import database.dao.DAO
 import database.dao.AccountDAO
 import database.dao.UserInformationDAO
-import domain.Account
-import domain.UserInfo
+import domain.user.Account
+import domain.user.UserInfo
 import io.github.cdimascio.dotenv.dotenv
 import org.jetbrains.exposed.sql.Database
 import java.util.Optional

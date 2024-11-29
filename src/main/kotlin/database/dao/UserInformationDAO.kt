@@ -1,7 +1,7 @@
 package database.dao
 
 import database.tables.UsersTable
-import domain.UserInfo
+import domain.user.UserInfo
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*

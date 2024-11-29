@@ -1,8 +1,10 @@
 package data
 
-import auth.Authenticator
+import services.auth.Authenticator
 import database.manager.DatabaseManager
-import domain.UserInfo
+import domain.auth.AuthResult
+import domain.auth.ResultCode
+import domain.user.UserInfo
 import grpc.DataProto
 import grpc.DataProto.UserDataRequest
 import grpc.DataProto.UserDataResponse
@@ -12,21 +14,22 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import services.data.DataServiceImpl
 import java.util.Optional
 
 class DataServiceImplTest {
 
-    private lateinit var authenticator: Authenticator
+    private lateinit var authenticatorMock: Authenticator
     private lateinit var databaseManagerMock: DatabaseManager
     private lateinit var dataServiceImpl: DataServiceImpl
     private lateinit var responseObserver: StreamObserver<UserDataResponse>
 
     @BeforeEach
     fun setUp() {
-        authenticator = mockk()
+        authenticatorMock = mockk()
         databaseManagerMock = mockk()
         responseObserver = mockk(relaxed = true)
-        dataServiceImpl = DataServiceImpl(databaseManagerMock)
+        dataServiceImpl = DataServiceImpl(authenticatorMock, databaseManagerMock)
     }
 
     @Test
@@ -44,6 +47,7 @@ class DataServiceImplTest {
             .setTotalDistance(100)
             .build()
 
+        every { authenticatorMock.login("testUser", "testPass") } returns AuthResult(ResultCode.OPERATION_SUCCESS, "")
         every { databaseManagerMock.getUserInformation("testUser") } returns Optional.of(userInfo)
 
         dataServiceImpl.getUserData(request, responseObserver)
@@ -66,7 +70,8 @@ class DataServiceImplTest {
             .setTotalDistance(0)
             .build()
 
-        every { databaseManagerMock.getUserInformation("testUser") } returns Optional.empty<UserInfo>()
+        every { authenticatorMock.login("testUser", "wrongPass") } returns AuthResult(ResultCode.INVALID_CREDENTIALS, "")
+        every { databaseManagerMock.getUserInformation("testUser") } returns Optional.of(UserInfo("John", 1000-7, 993-7, 986-7))
 
         dataServiceImpl.getUserData(request, responseObserver)
 

@@ -1,6 +1,6 @@
-import auth.AuthServiceImpl
-import auth.Authenticator
-import data.DataServiceImpl
+import services.auth.AuthServiceImpl
+import services.auth.Authenticator
+import services.data.DataServiceImpl
 import database.manager.DatabaseManagerService
 import io.grpc.Server
 import io.grpc.ServerBuilder
@@ -10,7 +10,7 @@ fun main() {
 
     val server: Server = ServerBuilder.forPort(50051)
         .addService(AuthServiceImpl(authenticator))
-        .addService(DataServiceImpl(DatabaseManagerService))
+        .addService(DataServiceImpl(authenticator, DatabaseManagerService))
         .build()
         .start()
 

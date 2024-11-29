@@ -1,7 +1,7 @@
 package database.manager
 
-import domain.Account
-import domain.UserInfo
+import domain.user.Account
+import domain.user.UserInfo
 import java.util.Optional
 
 /**
