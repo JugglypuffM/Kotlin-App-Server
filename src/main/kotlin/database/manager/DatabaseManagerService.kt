@@ -8,6 +8,7 @@ import domain.user.Account
 import domain.user.UserInfo
 import io.github.cdimascio.dotenv.dotenv
 import org.jetbrains.exposed.sql.Database
+import java.time.LocalDate
 import java.util.Optional
 
 /**
@@ -73,6 +74,10 @@ object DatabaseManagerService: DatabaseManager {
     }
 
     override fun saveTraining(login: String, training: Training) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getTrainingsOnDate(login: String, date: LocalDate): List<Training> {
         TODO("Not yet implemented")
     }
 }
