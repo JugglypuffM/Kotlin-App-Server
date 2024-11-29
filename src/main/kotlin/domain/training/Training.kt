@@ -1,5 +1,6 @@
 package domain.training
 
+import com.google.protobuf.Timestamp
 import grpc.TrainingProto
 import java.time.Duration
 import java.time.LocalDate
@@ -25,7 +26,19 @@ sealed class Training(
         )
 
         override fun toTrainingProto(): TrainingProto.Training {
-            TODO("Not yet implemented")
+            return TrainingProto.Training.newBuilder()
+                .setYoga(
+                    TrainingProto.Yoga.newBuilder()
+                        .setDate(
+                            Timestamp.newBuilder()
+                                .setSeconds(date.toEpochDay())
+                        )
+                        .setDuration(
+                            com.google.protobuf.Duration.newBuilder()
+                                .setSeconds(duration.seconds)
+                        )
+                        .build()
+                ).build()
         }
     }
 
@@ -35,7 +48,7 @@ sealed class Training(
     class Jogging(date: LocalDate, duration: Duration, val distance: Double) : Training(
         date = date,
         duration = duration
-    ){
+    ) {
         constructor(jogging: TrainingProto.Jogging) : this(
             LocalDate.ofEpochDay(jogging.date.seconds),
             Duration.ofSeconds(jogging.duration.seconds),
@@ -43,7 +56,20 @@ sealed class Training(
         )
 
         override fun toTrainingProto(): TrainingProto.Training {
-            TODO("Not yet implemented")
+            return TrainingProto.Training.newBuilder()
+                .setJogging(
+                    TrainingProto.Jogging.newBuilder()
+                        .setDate(
+                            Timestamp.newBuilder()
+                                .setSeconds(date.toEpochDay())
+                        )
+                        .setDuration(
+                            com.google.protobuf.Duration.newBuilder()
+                                .setSeconds(duration.seconds)
+                        )
+                        .setDistance(distance)
+                        .build()
+                ).build()
         }
     }
 
