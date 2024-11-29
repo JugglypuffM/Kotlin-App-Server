@@ -1,5 +1,6 @@
 package database.manager
 
+import domain.training.Training
 import domain.user.Account
 import domain.user.UserInfo
 import java.util.Optional
@@ -37,4 +38,9 @@ interface DatabaseManager {
      * Метод для получения дополнительной информации об аккаунте пользователя
      */
     fun getUserInformation(login: String) : Optional<UserInfo>
+
+    /**
+     * Метод для сохранения данных о тренировке в базу данных
+     */
+    fun saveTraining(login: String, training: Training)
 }
