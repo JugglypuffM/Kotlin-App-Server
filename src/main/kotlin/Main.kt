@@ -4,6 +4,7 @@ import services.data.DataServiceImpl
 import database.manager.DatabaseManagerService
 import io.grpc.Server
 import io.grpc.ServerBuilder
+import services.training.TrainingServiceImpl
 
 fun main() {
     val authenticator = Authenticator(DatabaseManagerService)
@@ -11,6 +12,7 @@ fun main() {
     val server: Server = ServerBuilder.forPort(50051)
         .addService(AuthServiceImpl(authenticator))
         .addService(DataServiceImpl(authenticator, DatabaseManagerService))
+        .addService(TrainingServiceImpl(authenticator, DatabaseManagerService))
         .build()
         .start()
 
