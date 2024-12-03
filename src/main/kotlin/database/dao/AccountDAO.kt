@@ -22,7 +22,7 @@ class AccountDAO : DAO<Account> {
     }
 
     override fun get(login: String): Optional<Account> {
-        var account: Account? = null
+        lateinit var account: Account
         transaction {
             try {
                 for (entry in UsersTable.selectAll().where { UsersTable.login.eq(login) }) {
