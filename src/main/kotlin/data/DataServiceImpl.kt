@@ -12,9 +12,9 @@ class DataServiceImpl(private val databaseManager: DatabaseManager) : DataServic
     private fun createBasicDataResponse(success: Boolean, info: UserInfo): UserDataResponse {
         val data = DataProto.UserData.newBuilder()
             .setName(info.name)
-            .setAge(info.age)
-            .setWeight(info.weight)
-            .setTotalDistance(info.distance)
+            .setAge(info.age.takeIf { it!! > 0 } ?: 0)
+            .setWeight(info.weight.takeIf { it!! > 0 } ?: 0)
+            .setTotalDistance(info.distance.takeIf { it!! > 0 } ?: 0)
             .build()
         return UserDataResponse.newBuilder()
             .setSuccess(success)

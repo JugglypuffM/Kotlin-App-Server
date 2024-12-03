@@ -7,7 +7,6 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.util.*
-import kotlin.jvm.optionals.getOrDefault
 
 class UserInformationDAO : DAO<UserInfo> {
     init {
@@ -25,25 +24,24 @@ class UserInformationDAO : DAO<UserInfo> {
             UsersTable.selectAll().where { UsersTable.login.eq(login) }
                 .map { entry ->
                     UserInfo(
-                        name = Optional.ofNullable(entry[UsersTable.name].takeIf { it.isNotBlank() }),
-                        age = Optional.ofNullable(entry[UsersTable.age].takeIf { it > 0 }),
-                        weight = Optional.ofNullable(entry[UsersTable.weight].takeIf { it > 0 }),
-                        distance = Optional.ofNullable(entry[UsersTable.distance].takeIf { it > 0 })
+                        name = entry[UsersTable.name].takeIf { it.isNotEmpty() },
+                        age = entry[UsersTable.age].takeIf { it > 0 },
+                        weight = entry[UsersTable.weight].takeIf { it > 0 },
+                        distance = entry[UsersTable.distance].takeIf { it > 0 }
                     )
                 }
                 .firstOrNull()
         }.let { Optional.ofNullable(it) }
     }
 
-
     override fun update(login: String, entry: UserInfo) {
         transaction {
             try {
-                UsersTable.update({ UsersTable.login.eq(login)}) {
-                    it[name] = entry.name.getOrDefault("")
-                    it[age] = entry.age.getOrDefault(0)
-                    it[weight] = entry.weight.getOrDefault(0)
-                    it[distance] = entry.distance.getOrDefault(0)
+                UsersTable.update({ UsersTable.login.eq(login) }) {
+                    it[name] = entry.name ?: ""
+                    it[age] = entry.age ?: 0
+                    it[weight] = entry.weight ?: 0
+                    it[distance] = entry.distance ?: 0
                 }
             } catch (e: Exception) {
                 throw DAO.DatabaseException("Information not exist for user with login: $login", e)
@@ -51,6 +49,11 @@ class UserInformationDAO : DAO<UserInfo> {
         }
     }
 
-    override fun add(entry: UserInfo) {}
-    override fun delete(login: String) {}
+    override fun add(entry: UserInfo) {
+        // Реализация добавления пользователя, если необходимо
+    }
+
+    override fun delete(login: String) {
+        // Реализация удаления пользователя, если необходимо
+    }
 }
