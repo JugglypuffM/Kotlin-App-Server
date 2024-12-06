@@ -42,7 +42,7 @@ class TrainingDAO{
                                 id = entry[TrainingTable.id].value,
                                 date = java.time.LocalDate.of(dateTime.year, dateTime.monthOfYear, dateTime.dayOfMonth),
                                 duration = java.time.Duration.ofSeconds(entry[TrainingTable.workoutDuration]),
-                                distance = entry[TrainingTable.distance] ?: 0
+                                distance = entry[TrainingTable.distance]?.toDouble() ?: 0.0
                             )
                             trainingList.add(training)
                         }
@@ -57,7 +57,7 @@ class TrainingDAO{
                     }
                 }
             } catch (e: Exception){
-                throw DatabaseException("Error fetching user with id: $id", e)
+                throw DatabaseException("Error fetching training on date: $date", e)
             }
         }
         return trainingList
@@ -68,7 +68,7 @@ class TrainingDAO{
             try {
                 TrainingTable.deleteWhere { TrainingTable.id.eq(id) }
             } catch (e: Exception) {
-                throw DatabaseException("The training was not found: $id", e)
+                throw DatabaseException("The training was not found with id: $id", e)
             }
         }
     }
@@ -87,13 +87,13 @@ class TrainingDAO{
                     when (training) {
                         is Training.Jogging -> {
                             it[workoutType] = "Jogging"
-                            it[distance] = training.distance
+                            it[distance] = training.distance.toBigDecimal()
                         }
                         is Training.Yoga -> it[workoutType] = "Yoga"
                     }
                 }
             } catch (e: Exception) {
-                throw DatabaseException("Error adding user with id: $id", e)
+                throw DatabaseException("Error adding training", e)
             }
         }
     }

@@ -23,6 +23,7 @@ sealed class Training(
         duration = duration
     ) {
         constructor(yoga: TrainingProto.Yoga) : this(
+            null,
             LocalDate.ofEpochDay(yoga.date.seconds),
             Duration.ofSeconds(yoga.duration.seconds)
         )
@@ -47,12 +48,13 @@ sealed class Training(
     /**
      * Информация о беге
      */
-    class Jogging(id: Long?, date: LocalDate, duration: Duration, val distance: Int) : Training(
+    class Jogging(id: Long?, date: LocalDate, duration: Duration, val distance: Double) : Training(
         id = id,
         date = date,
         duration = duration
     ) {
         constructor(jogging: TrainingProto.Jogging) : this(
+            null,
             LocalDate.ofEpochDay(jogging.date.seconds),
             Duration.ofSeconds(jogging.duration.seconds),
             jogging.distance
@@ -70,7 +72,7 @@ sealed class Training(
                             com.google.protobuf.Duration.newBuilder()
                                 .setSeconds(duration.seconds)
                         )
-                        .setDistance(distance.toDouble())
+                        .setDistance(distance)
                         .build()
                 ).build()
         }
