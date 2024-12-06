@@ -1,13 +1,17 @@
 package database.tables
 
-import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.datetime
-import java.time.LocalDateTime
+import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.jodatime.date
+import org.joda.time.DateTime
 
-object TrainingTable : IntIdTable() {
-    val userLogin: Column<String> = varchar("user_login", 45).references(UsersTable.login)
-    val workoutDate: Column<LocalDateTime> = datetime("workout_date")
-    val workoutDuration: Column<Int> = integer("workout_duration") // продолжительность в минутах
-    val additionalData: Column<String?> = varchar("additional_data", 255).nullable() // может быть null
+object TrainingTable : LongIdTable() {
+    val loginID = optReference(name="FK_loginID", UsersTable.id, onDelete = ReferenceOption.CASCADE)
+    val workoutType: Column<String> = varchar("type", 20)
+    val workoutDate: Column<DateTime> = date("workout_date")
+    val workoutDuration: Column<Long> = long("workout_duration")
+    val distance: Column<Int?> = integer("distance").nullable()
+    //Более подробная информация о тренировке: ссылка, описание и т.д.
+    val additionalData: Column<String?> = varchar("additional_data", 255).nullable()
 }

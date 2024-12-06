@@ -10,13 +10,15 @@ import java.time.LocalDate
  * Специфична для каждого типа тренировки
  */
 sealed class Training(
+    val id: Long?,
     val date: LocalDate,
     val duration: Duration
 ) {
     /**
      * Информация о йоге
      */
-    class Yoga(date: LocalDate, duration: Duration) : Training(
+    class Yoga(id: Long?, date: LocalDate, duration: Duration) : Training(
+        id = id,
         date = date,
         duration = duration
     ) {
@@ -45,7 +47,8 @@ sealed class Training(
     /**
      * Информация о беге
      */
-    class Jogging(date: LocalDate, duration: Duration, val distance: Double) : Training(
+    class Jogging(id: Long?, date: LocalDate, duration: Duration, val distance: Int) : Training(
+        id = id,
         date = date,
         duration = duration
     ) {
@@ -67,7 +70,7 @@ sealed class Training(
                             com.google.protobuf.Duration.newBuilder()
                                 .setSeconds(duration.seconds)
                         )
-                        .setDistance(distance)
+                        .setDistance(distance.toDouble())
                         .build()
                 ).build()
         }
