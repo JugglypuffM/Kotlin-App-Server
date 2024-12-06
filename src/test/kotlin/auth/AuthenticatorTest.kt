@@ -1,6 +1,6 @@
 package auth
 
-import database.dao.DAO.DatabaseException
+import database.exception.DatabaseException
 import database.manager.DatabaseManager
 import domain.user.Account
 import domain.auth.ResultCode

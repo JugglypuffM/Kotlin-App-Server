@@ -9,5 +9,5 @@ object UsersTable : IntIdTable() {
     val name : Column<String> = varchar("u_name", 20)
     val age : Column<Int> = integer("age")
     val weight : Column<Int> = integer("weight")
-    val distance : Column<Int> = integer("distance")
+    val level : Column<Int> = integer("level")
 }

@@ -1,12 +1,13 @@
 package database.dao
 
+import database.exception.DatabaseException
 import database.tables.UsersTable
 import domain.user.UserInfo
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
-class UserInformationDAO : DAO<UserInfo> {
+class UserInformationDAO {
     init {
         transaction {
             try {
@@ -17,7 +18,7 @@ class UserInformationDAO : DAO<UserInfo> {
         }
     }
 
-    override fun get(login: String): Optional<UserInfo> {
+    fun get(login: String): Optional<UserInfo> {
         var userInfo: UserInfo? = null
         transaction {
             try {
@@ -26,30 +27,28 @@ class UserInformationDAO : DAO<UserInfo> {
                         name = entry[UsersTable.name],
                         age = entry[UsersTable.age],
                         weight = entry[UsersTable.weight],
-                        distance = entry[UsersTable.distance])
+                        level = entry[UsersTable.level])
                 }
             } catch (e: Exception){
-                throw DAO.DatabaseException("Error fetching user with id: $id", e)
+                throw DatabaseException("Error fetching user with id: $id", e)
             }
         }
         return Optional.ofNullable(userInfo)
     }
 
-    override fun update(login: String, entry: UserInfo) {
+    fun update(login: String, entry: UserInfo) {
         transaction {
             try {
                 UsersTable.update({ UsersTable.login.eq(login)}) {
                     it[name] = entry.name
                     it[age] = entry.age
                     it[weight] = entry.weight
-                    it[distance] = entry.distance
+                    it[level] = entry.level
                 }
             } catch (e: Exception) {
-                throw DAO.DatabaseException("User not exist with id: $id", e)
+                throw DatabaseException("User not exist with id: $id", e)
             }
         }
     }
 
-    override fun add(entry: UserInfo) {}
-    override fun delete(login: String) {}
 }

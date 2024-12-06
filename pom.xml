@@ -131,11 +131,48 @@
             <version>5.2.2</version>
         </dependency>
 
+        <!-- Java Библиотека для работы с временем в ORM для бд -->
+        <dependency>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-java-time</artifactId>
+            <version>0.56.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Kotlin Библиотека для работы с временем в ORM для бд -->
+        <dependency>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-kotlin-datetime</artifactId>
+            <version>0.56.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Основная библиотека Exposed -->
+        <dependency>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-core</artifactId>
+            <version>0.56.0</version>
+        </dependency>
+
+        <!-- Библиотека Exposed - DAO представление бд -->
+        <dependency>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-dao</artifactId>
+            <version>0.56.0</version>
+        </dependency>
+
+        <!-- Библиотека Exposed для работы со временем -->
+        <dependency>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-jodatime</artifactId>
+            <version>0.56.0</version>
+        </dependency>
+
         <!-- Библиотека Exposed - ORM для бд -->
         <dependency>
             <groupId>org.jetbrains.exposed</groupId>
             <artifactId>exposed-jdbc</artifactId>
-            <version>0.55.0</version>
+            <version>0.56.0</version>
         </dependency>
 
         <!-- Библиотека для логирования -->
