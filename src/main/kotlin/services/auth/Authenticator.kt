@@ -6,9 +6,9 @@ import domain.user.Account
 import domain.auth.AuthResult
 import domain.auth.ResultCode
 
-class Authenticator(private val databaseManager: DatabaseManager) {
+class Authenticator(private val databaseManager: DatabaseManager): AuthenticatorInterface {
 
-    fun register(account: Account): AuthResult {
+    override fun register(account: Account): AuthResult {
         try {
             databaseManager.addAccount(account)
             return AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully registered.")
@@ -17,7 +17,7 @@ class Authenticator(private val databaseManager: DatabaseManager) {
         }
     }
 
-    fun login(login: String, password: String): AuthResult =
+    override fun login(login: String, password: String): AuthResult =
         databaseManager.getAccount(login).map<AuthResult> {
             if (it.password == password) {
                 AuthResult(ResultCode.OPERATION_SUCCESS, "User successfully logged in.")

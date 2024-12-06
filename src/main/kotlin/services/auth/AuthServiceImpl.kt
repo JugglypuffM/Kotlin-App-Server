@@ -9,7 +9,7 @@ import grpc.AuthProto.RegisterRequest
 import grpc.AuthServiceGrpc
 import io.grpc.stub.*
 
-class AuthServiceImpl(private val authenticator: Authenticator) : AuthServiceGrpc.AuthServiceImplBase() {
+class AuthServiceImpl(private val authenticator: AuthenticatorInterface) : AuthServiceGrpc.AuthServiceImplBase() {
     private fun createAuthResponse(authResult: AuthResult): AuthResponse {
         return AuthResponse.newBuilder()
             .setResultCode(authResult.resultCode.code)

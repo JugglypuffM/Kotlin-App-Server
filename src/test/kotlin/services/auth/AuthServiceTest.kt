@@ -1,4 +1,4 @@
-package auth
+package services.auth
 
 import domain.user.Account
 import domain.auth.AuthResult
@@ -12,8 +12,6 @@ import io.mockk.verify
 import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import services.auth.AuthServiceImpl
-import services.auth.Authenticator
 
 class AuthServiceTest {
 

@@ -8,11 +8,11 @@ import grpc.TrainingProto
 import grpc.TrainingServiceGrpc
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
-import services.auth.Authenticator
+import services.auth.AuthenticatorInterface
 import java.time.LocalDate
 import java.util.Optional
 
-class TrainingServiceImpl(private val authenticator: Authenticator, private val databaseManager: DatabaseManager) :
+class TrainingServiceImpl(private val authenticator: AuthenticatorInterface, private val databaseManager: DatabaseManager) :
     TrainingServiceGrpc.TrainingServiceImplBase() {
     override fun saveTraining(request: TrainingProto.SaveRequest, responseObserver: StreamObserver<Empty>) {
         when (authenticator.login(request.login, request.password).resultCode) {

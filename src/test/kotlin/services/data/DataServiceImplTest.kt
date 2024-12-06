@@ -1,4 +1,4 @@
-package data
+package services.data
 
 import services.auth.Authenticator
 import database.manager.DatabaseManager
@@ -14,7 +14,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import services.data.DataServiceImpl
 import java.util.Optional
 
 class DataServiceImplTest {

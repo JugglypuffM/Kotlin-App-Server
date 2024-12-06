@@ -8,9 +8,9 @@ import grpc.DataProto.UserDataRequest
 import grpc.DataProto.UserDataResponse
 import grpc.DataServiceGrpc
 import io.grpc.stub.StreamObserver
-import services.auth.Authenticator
+import services.auth.AuthenticatorInterface
 
-class DataServiceImpl(private val authenticator: Authenticator, private val databaseManager: DatabaseManager) :
+class DataServiceImpl(private val authenticator: AuthenticatorInterface, private val databaseManager: DatabaseManager) :
     DataServiceGrpc.DataServiceImplBase() {
     private fun createBasicDataResponse(success: Boolean, info: UserInfo): UserDataResponse {
         val data = DataProto.UserData.newBuilder()
