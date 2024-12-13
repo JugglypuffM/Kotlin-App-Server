@@ -11,6 +11,7 @@ object InMemoryDatabaseManager : DatabaseManager {
     override fun addAccount(account: Account) {
         if (!accounts.containsKey(account.login)) {
             accounts[account.login] = account
+            userInformation[account.login] = UserInfo()
         } else {
             throw DAO.DatabaseException("Account already exist")
         }

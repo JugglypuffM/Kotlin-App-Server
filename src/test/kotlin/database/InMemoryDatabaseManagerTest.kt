@@ -115,4 +115,13 @@ class InMemoryDatabaseManagerTest {
         val retrievedUserInfo = databaseManager.getUserInformation("nonexistent")
         assertFalse(retrievedUserInfo.isPresent)
     }
+
+    @Test
+    fun testGetEmptyUserInformationIfAccountExist() {
+        databaseManager.dropDataBase()
+        databaseManager.addAccount(Account("lox", "12345678"))
+        val retrievedUserInfo = databaseManager.getUserInformation("lox")
+        assertTrue(retrievedUserInfo.isPresent)
+        assertEquals(UserInfo(name = null, age = null, weight = null, distance = null), retrievedUserInfo.get())
+    }
 }
