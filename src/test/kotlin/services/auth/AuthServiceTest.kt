@@ -1,8 +1,8 @@
-package auth
+package services.auth
 
-import domain.Account
-import domain.AuthResult
-import domain.ResultCode
+import domain.user.Account
+import domain.auth.AuthResult
+import domain.auth.ResultCode
 import grpc.AuthProto.AuthResponse
 import grpc.AuthProto.LoginRequest
 import grpc.AuthProto.RegisterRequest

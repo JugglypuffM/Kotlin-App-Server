@@ -1,23 +1,29 @@
-package data
+package services.data
 
-import auth.Authenticator
 import com.google.protobuf.Empty
 import database.manager.DatabaseManager
-import domain.ResultCode
-import domain.UserInfo
+import domain.auth.ResultCode
+import domain.user.UserInfo
 import grpc.DataProto
 import grpc.DataProto.UserDataRequest
 import grpc.DataProto.UserDataResponse
 import grpc.DataServiceGrpc
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
+import services.auth.AuthenticatorInterface
 
-class DataServiceImpl(private val authenticator: Authenticator, private val databaseManager: DatabaseManager) :
+class DataServiceImpl(private val authenticator: AuthenticatorInterface, private val databaseManager: DatabaseManager) :
     DataServiceGrpc.DataServiceImplBase() {
     private fun createBasicDataResponse(success: Boolean, info: UserInfo): UserDataResponse {
+        val data = DataProto.UserData.newBuilder()
+            .setName(info.name)
+            .setAge(info.age)
+            .setWeight(info.weight)
+            .setTotalDistance(info.distance)
+            .build()
         return UserDataResponse.newBuilder()
             .setSuccess(success)
-            .setData(info.toUserData())
+            .setData(data)
             .build()
     }
 
@@ -25,12 +31,15 @@ class DataServiceImpl(private val authenticator: Authenticator, private val data
         request: UserDataRequest,
         responseObserver: StreamObserver<UserDataResponse>
     ) {
-        val result = authenticator.login(request.login, request.password)
-        when (result.resultCode) {
+        when (authenticator.login(request.login, request.password).resultCode) {
             ResultCode.OPERATION_SUCCESS -> {
-                databaseManager.getUserInformation(request.login).map<Unit> {
-                    responseObserver.onNext(createBasicDataResponse(true, it))
-                }.orElse(responseObserver.onNext(createBasicDataResponse(false, UserInfo("", 0, 0, 0))))
+                val userInfo = databaseManager.getUserInformation(request.login)
+                responseObserver.onNext(
+                    createBasicDataResponse(
+                        userInfo.isPresent,
+                        userInfo.orElse(UserInfo("", 0, 0, 0))
+                    )
+                )
             }
 
             else -> responseObserver.onNext(createBasicDataResponse(false, UserInfo("", 0, 0, 0)))

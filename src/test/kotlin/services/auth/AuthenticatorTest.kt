@@ -1,9 +1,9 @@
-package auth
+package services.auth
 
 import database.dao.DAO.DatabaseException
 import database.manager.DatabaseManager
-import domain.Account
-import domain.ResultCode
+import domain.user.Account
+import domain.auth.ResultCode
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
