@@ -10,20 +10,19 @@ import java.time.LocalDate
  * Специфична для каждого типа тренировки
  */
 sealed class Training(
-    val id: Long?,
     val date: LocalDate,
-    val duration: Duration
+    val duration: Duration,
+    val id: Long? = null
 ) {
     /**
      * Информация о йоге
      */
-    class Yoga(id: Long?, date: LocalDate, duration: Duration) : Training(
-        id = id,
+    class Yoga(date: LocalDate, duration: Duration, id: Long? = null) : Training(
         date = date,
-        duration = duration
+        duration = duration,
+        id = id
     ) {
         constructor(yoga: TrainingProto.Yoga) : this(
-            null,
             LocalDate.ofEpochDay(yoga.date.seconds),
             Duration.ofSeconds(yoga.duration.seconds)
         )
@@ -48,13 +47,12 @@ sealed class Training(
     /**
      * Информация о беге
      */
-    class Jogging(id: Long?, date: LocalDate, duration: Duration, val distance: Double) : Training(
-        id = id,
+    class Jogging(date: LocalDate, duration: Duration, val distance: Double, id: Long? = null) : Training(
         date = date,
-        duration = duration
+        duration = duration,
+        id = id
     ) {
         constructor(jogging: TrainingProto.Jogging) : this(
-            null,
             LocalDate.ofEpochDay(jogging.date.seconds),
             Duration.ofSeconds(jogging.duration.seconds),
             jogging.distance
