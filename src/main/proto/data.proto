@@ -1,15 +1,24 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option java_package = "grpc";
 option java_outer_classname = "DataProto";
 
 service DataService{
   rpc getUserData (UserDataRequest) returns (UserDataResponse);
+  rpc updateUserData (UpdateDataRequest) returns (google.protobuf.Empty);
 }
 
 message UserDataRequest{
   string login = 1;
   string password = 2;
+}
+
+message UpdateDataRequest{
+  string login = 1;
+  string password = 2;
+  UserData data = 3;
 }
 
 message UserDataResponse{
