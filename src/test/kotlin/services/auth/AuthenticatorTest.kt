@@ -1,4 +1,4 @@
-package auth
+package services.auth
 
 import database.exception.DatabaseException
 import database.manager.DatabaseManager
@@ -9,7 +9,6 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import services.auth.Authenticator
 import java.util.Optional
 
 class AuthenticatorTest {
