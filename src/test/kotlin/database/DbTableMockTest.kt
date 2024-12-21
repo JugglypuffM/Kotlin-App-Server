@@ -1,6 +1,6 @@
 package database
 
-import database.dao.DAO
+import database.dao.AccountDAO
 import database.dao.DbTableMock
 import domain.user.Account
 import org.junit.jupiter.api.Assertions.*
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class DbTableMockTest {
-    private lateinit var AccountDAO: DAO<Account>
+    private lateinit var AccountDAO: DbTableMock
 
     @BeforeEach
     fun setUp() {

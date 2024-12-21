@@ -11,14 +11,16 @@ import java.time.LocalDate
  */
 sealed class Training(
     val date: LocalDate,
-    val duration: Duration
+    val duration: Duration,
+    val id: Long? = null
 ) {
     /**
      * Информация о йоге
      */
-    class Yoga(date: LocalDate, duration: Duration) : Training(
+    class Yoga(date: LocalDate, duration: Duration, id: Long? = null) : Training(
         date = date,
-        duration = duration
+        duration = duration,
+        id = id
     ) {
         constructor(yoga: TrainingProto.Yoga) : this(
             LocalDate.ofEpochDay(yoga.date.seconds),
@@ -45,9 +47,10 @@ sealed class Training(
     /**
      * Информация о беге
      */
-    class Jogging(date: LocalDate, duration: Duration, val distance: Double) : Training(
+    class Jogging(date: LocalDate, duration: Duration, val distance: Double, id: Long? = null) : Training(
         date = date,
-        duration = duration
+        duration = duration,
+        id = id
     ) {
         constructor(jogging: TrainingProto.Jogging) : this(
             LocalDate.ofEpochDay(jogging.date.seconds),
