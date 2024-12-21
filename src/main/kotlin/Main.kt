@@ -10,7 +10,7 @@ fun main() {
 
     val server: Server = ServerBuilder.forPort(50051)
         .addService(AuthServiceImpl(authenticator))
-        .addService(DataServiceImpl(DatabaseManagerService))
+        .addService(DataServiceImpl(authenticator, DatabaseManagerService))
         .build()
         .start()
 
