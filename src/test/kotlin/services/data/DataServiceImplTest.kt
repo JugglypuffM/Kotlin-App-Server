@@ -3,8 +3,6 @@ package services.data
 import services.auth.Authenticator
 import com.google.protobuf.Empty
 import database.manager.DatabaseManager
-import domain.AuthResult
-import domain.ResultCode
 import domain.auth.AuthResult
 import domain.auth.ResultCode
 import domain.user.UserInfo
@@ -36,7 +34,7 @@ class DataServiceImplTest {
         databaseManagerMock = mockk()
         responseObserver = mockk(relaxed = true)
         emptyObserver = mockk(relaxed = true)
-        dataServiceImpl = DataServiceImpl(authenticator, databaseManagerMock)
+        dataServiceImpl = DataServiceImpl(authenticatorMock, databaseManagerMock)
     }
 
     @Test
@@ -50,7 +48,7 @@ class DataServiceImplTest {
             .setTotalDistance(0)
             .build()
 
-        every { authenticator.login("", "") } returns AuthResult(
+        every { authenticatorMock.login("", "") } returns AuthResult(
             ResultCode.INVALID_CREDENTIALS,
             "invalid creds"
         )
@@ -78,7 +76,7 @@ class DataServiceImplTest {
 
         every { authenticatorMock.login("testUser", "testPass") } returns AuthResult(ResultCode.OPERATION_SUCCESS, "")
         every { databaseManagerMock.getUserInformation("testUser") } returns Optional.of(userInfo)
-        every { authenticator.login("testUser", "testPass") } returns AuthResult(
+        every { authenticatorMock.login("testUser", "testPass") } returns AuthResult(
             ResultCode.OPERATION_SUCCESS,
             "success"
         )
@@ -105,7 +103,7 @@ class DataServiceImplTest {
 
         every { authenticatorMock.login("testUser", "wrongPass") } returns AuthResult(ResultCode.INVALID_CREDENTIALS, "")
         every { databaseManagerMock.getUserInformation("testUser") } returns Optional.of(UserInfo("John", 1000-7, 993-7, 986-7))
-        every { authenticator.login("testUser", "wrongPass") } returns AuthResult(
+        every { authenticatorMock.login("testUser", "wrongPass") } returns AuthResult(
             ResultCode.INVALID_CREDENTIALS,
             "invalid creds"
         )
@@ -120,7 +118,7 @@ class DataServiceImplTest {
     fun `updateUserData should return failure when no data provided`() {
         val request = DataProto.UpdateDataRequest.newBuilder().setLogin("testUser").setPassword("testPass").build()
 
-        every { authenticator.login("testUser", "testPass") } returns AuthResult(
+        every { authenticatorMock.login("testUser", "testPass") } returns AuthResult(
             ResultCode.OPERATION_SUCCESS,
             "success"
         )
@@ -145,7 +143,7 @@ class DataServiceImplTest {
             .build()
 
         every { databaseManagerMock.updateUserInformation("testUser", userInfo) } just Runs
-        every { authenticator.login("testUser", "testPass") } returns AuthResult(
+        every { authenticatorMock.login("testUser", "testPass") } returns AuthResult(
             ResultCode.OPERATION_SUCCESS,
             "success"
         )
@@ -156,7 +154,7 @@ class DataServiceImplTest {
     }
 
     @Test
-    fun `getBasicUserData should return failure when credentials are invalid`() {
+    fun `updateUserData should return failure when credentials are invalid`() {
         val userInfo = UserInfo("testName", 20, 80, 100)
 
         val request = DataProto.UpdateDataRequest.newBuilder()
@@ -166,7 +164,7 @@ class DataServiceImplTest {
             .build()
 
         every { databaseManagerMock.updateUserInformation("testUser", userInfo) } just Runs
-        every { authenticator.login("testUser", "wrongPass") } returns AuthResult(
+        every { authenticatorMock.login("testUser", "wrongPass") } returns AuthResult(
             ResultCode.INVALID_CREDENTIALS,
             "success"
         )

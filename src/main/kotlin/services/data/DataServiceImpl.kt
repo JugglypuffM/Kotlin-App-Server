@@ -1,5 +1,6 @@
 package services.data
 
+import com.google.protobuf.Empty
 import database.manager.DatabaseManager
 import domain.auth.ResultCode
 import domain.user.UserInfo
@@ -7,6 +8,7 @@ import grpc.DataProto
 import grpc.DataProto.UserDataRequest
 import grpc.DataProto.UserDataResponse
 import grpc.DataServiceGrpc
+import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import services.auth.AuthenticatorInterface
 
@@ -43,5 +45,22 @@ class DataServiceImpl(private val authenticator: AuthenticatorInterface, private
             else -> responseObserver.onNext(createBasicDataResponse(false, UserInfo("", 0, 0, 0)))
         }
         responseObserver.onCompleted()
+    }
+
+    override fun updateUserData(request: DataProto.UpdateDataRequest, responseObserver: StreamObserver<Empty>) {
+        val result = authenticator.login(request.login, request.password)
+        if (!request.hasData()) {
+            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("No data provided").asRuntimeException())
+            return
+        }
+        when (result.resultCode) {
+            ResultCode.OPERATION_SUCCESS -> {
+                databaseManager.updateUserInformation(request.login, UserInfo(request.data))
+                responseObserver.onNext(Empty.getDefaultInstance())
+                responseObserver.onCompleted()
+            }
+
+            else -> responseObserver.onError(Status.UNAUTHENTICATED.withDescription("Invalid credentials").asRuntimeException())
+        }
     }
 }
