@@ -38,10 +38,18 @@ class UserInformationDAO : DAO<UserInfo> {
         transaction {
             try {
                 UsersTable.update({ UsersTable.login.eq(login) }) {
-                    it[name] = entry.name ?: ""
-                    it[age] = entry.age ?: 0
-                    it[weight] = entry.weight ?: 0
-                    it[distance] = entry.distance ?: 0
+                    if (entry.name is String && entry.name.isNotBlank()) {
+                        it[name] = entry.name
+                    }
+                    if (entry.age is Int && entry.age > 0) {
+                        it[age] = entry.age
+                    }
+                    if (entry.weight is Int && entry.weight > 0) {
+                        it[weight] = entry.weight
+                    }
+                    if (entry.distance is Int && entry.distance > 0) {
+                        it[distance] = entry.distance
+                    }
                 }
             } catch (e: Exception) {
                 throw DAO.DatabaseException("Information not exist for user with login: $login", e)
