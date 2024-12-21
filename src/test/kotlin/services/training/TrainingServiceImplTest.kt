@@ -31,7 +31,6 @@ class TrainingServiceImplTest {
 //    @Test
 //    fun `saveTraining - should save training successfully`() {
 //        val date = LocalDate.now()
-//        // Arrange
 //        val request = TrainingProto.SaveRequest.newBuilder()
 //            .setLogin("user1")
 //            .setPassword("password")
@@ -39,8 +38,8 @@ class TrainingServiceImplTest {
 //                TrainingProto.Training.newBuilder()
 //                    .setYoga(
 //                        TrainingProto.Yoga.newBuilder()
-//                            .setDate(com.google.protobuf.Timestamp.newBuilder().setSeconds(date.toEpochDay())) // Example date
-//                            .setDuration(com.google.protobuf.Duration.newBuilder().setSeconds(3600)) // 1 hour
+//                            .setDate(com.google.protobuf.Timestamp.newBuilder().setSeconds(date.toEpochDay()))
+//                            .setDuration(com.google.protobuf.Duration.newBuilder().setSeconds(3600))
 //                            .build()
 //                    )
 //                    .build()
@@ -52,10 +51,8 @@ class TrainingServiceImplTest {
 //        every { authenticator.login("user1", "password") } returns AuthResult(ResultCode.OPERATION_SUCCESS, "Success")
 //        every { databaseManager.saveTraining("user1", Training.Yoga(date, Duration.ofSeconds(3600))) } just Runs
 //
-//        // Act
 //        service.saveTraining(request, responseObserver)
 //
-//        // Assert
 //        verify { databaseManager.saveTraining("user1", eq(Training.Yoga(date, Duration.ofSeconds(3600)))) }
 //        verify { responseObserver.onNext(Empty.getDefaultInstance()) }
 //        verify { responseObserver.onCompleted() }
@@ -76,10 +73,8 @@ class TrainingServiceImplTest {
             "Invalid credentials"
         )
 
-        // Act
         service.saveTraining(request, responseObserver)
 
-        // Assert
         verify {
             responseObserver.onError(withArg {
                 assert(it is StatusRuntimeException)
@@ -104,10 +99,8 @@ class TrainingServiceImplTest {
         every { authenticator.login("user1", "password") } returns AuthResult(ResultCode.OPERATION_SUCCESS, "Success")
         every { databaseManager.getTrainingsOnDate("user1", date) } returns trainings
 
-        // Act
         service.getTrainings(request, responseObserver)
 
-        // Assert
         verify {
             responseObserver.onNext(withArg {
                 assert(it.trainingsCount == 2)

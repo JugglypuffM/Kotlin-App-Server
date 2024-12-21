@@ -28,6 +28,16 @@ class TrainingServiceImpl(private val authenticator: AuthenticatorInterface, pri
                 training.ifPresentOrElse(
                     {
                         databaseManager.saveTraining(request.login, it)
+
+                        val info = databaseManager.getUserInformation(request.login).get()
+                        when (it) {
+                            is Training.Jogging -> databaseManager.updateUserInformation(
+                                request.login,
+                                info.copy(distance = info.distance + it.distance)
+                            )
+
+                            is Training.Yoga -> {}
+                        }
                         responseObserver.onNext(Empty.getDefaultInstance())
                     },
                     {
