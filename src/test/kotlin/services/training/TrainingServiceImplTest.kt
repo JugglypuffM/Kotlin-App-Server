@@ -98,7 +98,7 @@ class TrainingServiceImplTest {
             .setDate(com.google.protobuf.Timestamp.newBuilder().setSeconds(date.toEpochDay()))
             .build()
 
-        val trainings = listOf(Training.Yoga(date, Duration.ofSeconds(1000)), Training.Jogging(date, Duration.ofSeconds(1000), 1.0))
+        val trainings = listOf(Training.Yoga(date, Duration.ofSeconds(1000)), Training.Jogging(date, Duration.ofSeconds(1000), 1))
         val responseObserver = mockk<StreamObserver<TrainingProto.TrainingsResponse>>(relaxed = true)
 
         every { authenticator.login("user1", "password") } returns AuthResult(ResultCode.OPERATION_SUCCESS, "Success")

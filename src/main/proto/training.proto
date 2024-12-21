@@ -27,7 +27,7 @@ message Yoga {
 message Jogging {
   google.protobuf.Timestamp date = 1;
   google.protobuf.Duration duration = 2;
-  double distance = 3;
+  int32 distance = 3;
 }
 
 message SaveRequest {

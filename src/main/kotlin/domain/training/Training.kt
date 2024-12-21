@@ -45,7 +45,7 @@ sealed class Training(
     /**
      * Информация о беге
      */
-    class Jogging(date: LocalDate, duration: Duration, val distance: Double) : Training(
+    class Jogging(date: LocalDate, duration: Duration, val distance: Int) : Training(
         date = date,
         duration = duration
     ) {
